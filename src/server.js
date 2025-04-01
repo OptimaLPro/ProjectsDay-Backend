@@ -6,6 +6,7 @@ import { dbConnection } from "./connection/dbConnect.js";
 import userRouter from "./routes/users.js";
 import projectRouter from "./routes/projects.js";
 import internshipRouter from "./routes/internships.js";
+import instructorRouter from "./routes/instructors.js";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(express.json());
 // app.use("/api/users", userRouter);
 app.use("/api/projects", projectRouter);
 app.use("/api/internships", internshipRouter);
+app.use("/api/instructors", instructorRouter);
 
 const PORT = process.env.PORT || 5000;
 
