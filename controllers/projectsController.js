@@ -41,7 +41,6 @@ export const getProjects = async (req, res) => {
     // בדיקה האם יש עמוד נוסף
     const nextPage = (page + 1) * pageSize < totalProjects ? page + 1 : null;
 
-    console.log("Projects retrieved successfully:", projects);
     res.status(200).json({ projects, nextPage });
   } catch (error) {
     console.error("Error retrieving projects:", error);
@@ -56,7 +55,6 @@ export const getProjectById = async (req, res) => {
     if (!project) {
       return res.status(404).send("Project not found.");
     }
-    console.log("Project retrieved successfully:", project);
     res.status(200).json(project);
   } catch (error) {
     console.error("Error retrieving project:", error);
@@ -91,11 +89,57 @@ export const createProject = async (req, res) => {
     });
 
     await newProject.save();
-    console.log("Project created successfully:", newProject);
     res.status(201).json(newProject);
   } catch (error) {
     console.error("Error creating project:", error);
     res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+export const updateProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, internship, description, instructor, year } = req.body;
+    const members = JSON.parse(req.body.members || "[]");
+
+    const existingProject = await Project.findById(id);
+    if (!existingProject) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    // 🛡️ בדיקת הרשאה – רק מי שמופיע ב־members יכול לעדכן
+    const userEmail = req.user?.email;
+    const isAuthorized = existingProject.members.some(
+      (member) => member.email === userEmail
+    );
+
+    if (!isAuthorized) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to update this project" });
+    }
+
+    let imageUrl = existingProject.image;
+
+    if (req.file) {
+      const result = await streamUpload(req.file.buffer);
+      imageUrl = result.secure_url;
+    }
+
+    existingProject.name = name;
+    existingProject.internship = internship;
+    existingProject.description = description;
+    existingProject.instructor = instructor;
+    existingProject.year = year;
+    existingProject.members = members;
+    existingProject.image = imageUrl;
+
+    await existingProject.save();
+
+    res.status(200).json(existingProject);
+  } catch (error) {
+    console.error("Error updating project:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
