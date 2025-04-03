@@ -20,7 +20,10 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-// app.use("/api/users", userRouter);
+app.use("/", (req, res) => {
+  res.send("Welcome to the API");
+});
+
 app.use("/api/projects", projectRouter);
 app.use("/api/internships", internshipRouter);
 app.use("/api/instructors", instructorRouter);
