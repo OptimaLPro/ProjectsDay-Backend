@@ -3,10 +3,11 @@ import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import { dbConnection } from "./connection/dbConnect.js";
-import userRouter from "./routes/users.js";
+import userRouter from "./routes/auth.js";
 import projectRouter from "./routes/projects.js";
 import internshipRouter from "./routes/internships.js";
 import instructorRouter from "./routes/instructors.js";
+import authRoutes from "./routes/auth.js";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/api/projects", projectRouter);
 app.use("/api/internships", internshipRouter);
 app.use("/api/instructors", instructorRouter);
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 5000;
 

@@ -66,8 +66,10 @@ export const getProjectById = async (req, res) => {
 
 export const createProject = async (req, res) => {
   try {
-    const { name, internship, description, instructor, year, members } = req.body;
-    const parsedMembers = typeof members === "string" ? JSON.parse(members) : members;
+    const { name, internship, description, instructor, year, members } =
+      req.body;
+    const parsedMembers =
+      typeof members === "string" ? JSON.parse(members) : members;
 
     if (!req.file) {
       return res.status(400).json({ message: "Image is required." });
@@ -94,5 +96,27 @@ export const createProject = async (req, res) => {
   } catch (error) {
     console.error("Error creating project:", error);
     res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+export const getMyProject = async (req, res) => {
+  try {
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const project = await Project.findOne({
+      "members.email": userEmail,
+    });
+
+    if (!project) {
+      return res.status(200).json({ exists: false, project: null });
+    }
+
+    return res.status(200).json({ exists: true, project });
+  } catch (error) {
+    console.error("Error checking user project:", error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
