@@ -20,8 +20,8 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-app.use("/", (req, res) => {
-  res.send("Welcome to the API");
+app.get("/hello", (req, res) => {
+  res.send("Hello, world!");
 });
 
 app.use("/api/projects", projectRouter);
