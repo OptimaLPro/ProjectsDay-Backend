@@ -4,9 +4,19 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const createToken = (user) => {
-  return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
-  });
+  return jwt.sign(
+    {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      internship: user.internship,
+      year: user.year,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
 };
 
 export const register = async (req, res) => {
@@ -39,6 +49,8 @@ export const login = async (req, res) => {
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
+
+    console.log("User found:", user); // Debugging line
 
     const token = createToken(user);
     res.json({ token });
