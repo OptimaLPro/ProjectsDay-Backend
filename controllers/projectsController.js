@@ -48,6 +48,19 @@ export const getProjects = async (req, res) => {
   }
 };
 
+export const getAllProjects = async (req, res) => {
+  try {
+    const projects = await Project.find({});
+    if (!projects || projects.length === 0) {
+      return res.status(404).send("No projects found.");
+    }
+    res.status(200).json(projects);
+  } catch (error) {
+    console.error("Error retrieving all projects:", error);
+    res.status(500).send("Internal server error.");
+  }
+};
+
 export const getProjectById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -107,20 +120,24 @@ export const updateProject = async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    // 🛡️ בדיקת הרשאה – רק מי שמופיע ב־members יכול לעדכן
-    const userEmail = req.user?.email;
-    const isAuthorized = existingProject.members.some(
-      (member) => member.email === userEmail
-    );
+    // ✅ בדיקת הרשאה – Admin יכול הכל
+    const user = req.user;
+    console.log("User from request:", user);
+    const isAdmin = user?.role === "admin";
 
-    if (!isAuthorized) {
-      return res
-        .status(403)
-        .json({ message: "Not authorized to update this project" });
+    if (!isAdmin) {
+      const userEmail = user?.email;
+      const isAuthorized = existingProject.members.some(
+        (member) => member.email === userEmail
+      );
+      if (!isAuthorized) {
+        return res
+          .status(403)
+          .json({ message: "Not authorized to update this project" });
+      }
     }
 
     let imageUrl = existingProject.image;
-
     if (req.file) {
       const result = await streamUpload(req.file.buffer);
       imageUrl = result.secure_url;
@@ -135,7 +152,6 @@ export const updateProject = async (req, res) => {
     existingProject.image = imageUrl;
 
     await existingProject.save();
-
     res.status(200).json(existingProject);
   } catch (error) {
     console.error("Error updating project:", error);
@@ -162,5 +178,31 @@ export const getMyProject = async (req, res) => {
   } catch (error) {
     console.error("Error checking user project:", error);
     res.status(500).json({ error: "Internal server error." });
+  }
+};
+
+export const deleteProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const project = await Project.findById(id);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    const user = req.user;
+    const isAdmin = user?.role === "admin";
+
+    if (!isAdmin) {
+      return res
+        .status(403)
+        .json({ message: "Only admin can delete projects" });
+    }
+
+    await Project.findByIdAndDelete(id);
+    res.status(200).json({ message: "Project deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

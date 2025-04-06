@@ -13,6 +13,7 @@ export const ensureUserMiddleware = (req, res, next) => {
     req.user = {
       id: decoded.id,
       email: decoded.email,
+      role: decoded.role,
     };
     next();
   } catch (err) {
