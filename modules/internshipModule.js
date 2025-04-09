@@ -6,6 +6,11 @@ const internshipSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    years: {
+      type: [Number],
+      required: true,
+      default: [],
+    },
   },
   { timestamps: true }
 );
