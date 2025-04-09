@@ -30,15 +30,18 @@ const streamUpload = (buffer) => {
 
 export const getProjects = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 0; // עמוד נוכחי, ברירת מחדל 0
-    const pageSize = 6; // מספר פרויקטים לעמוד
-    // מציאת הפרויקטים לעמוד הנוכחי
-    const projects = await Project.find({})
+    const page = parseInt(req.query.page) || 0;
+    const year = req.query.year; // 🆕 קבלת השנה מה-query string
+    const pageSize = 6;
+
+    const filter = year ? { year } : {}; // 🆕 סינון לפי שנה אם נשלחה
+
+    const projects = await Project.find(filter)
       .skip(page * pageSize)
       .limit(pageSize);
-    // ספירת כל הפרויקטים במסד
-    const totalProjects = await Project.countDocuments({});
-    // בדיקה האם יש עמוד נוסף
+
+    const totalProjects = await Project.countDocuments(filter);
+
     const nextPage = (page + 1) * pageSize < totalProjects ? page + 1 : null;
 
     res.status(200).json({ projects, nextPage });

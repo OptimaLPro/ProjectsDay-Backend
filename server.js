@@ -8,6 +8,7 @@ import projectRouter from "./routes/projects.js";
 import internshipRouter from "./routes/internships.js";
 import instructorRouter from "./routes/instructors.js";
 import authRoutes from "./routes/auth.js";
+import yearbookRouter from "./routes/yearbooks.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/projects", projectRouter);
 app.use("/api/internships", internshipRouter);
 app.use("/api/instructors", instructorRouter);
 app.use("/api/auth", authRoutes);
+app.use("/api/yearbooks", yearbookRouter);
 
 const PORT = process.env.PORT || 5000;
 
