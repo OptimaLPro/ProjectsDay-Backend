@@ -3,18 +3,16 @@ import multer from "multer";
 import streamifier from "streamifier";
 import Project from "../modules/projectModule.js";
 
-// Configure Cloudinary using environment variables
+// Cloudinary config
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Set up multer with memory storage
 const storage = multer.memoryStorage();
 export const upload = multer({ storage });
 
-// Helper function to upload file buffer to Cloudinary
 const streamUpload = (buffer) => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
@@ -31,17 +29,14 @@ const streamUpload = (buffer) => {
 export const getProjects = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 0;
-    const year = req.query.year; // 🆕 קבלת השנה מה-query string
+    const year = req.query.year;
     const pageSize = 6;
-
-    const filter = year ? { year } : {}; // 🆕 סינון לפי שנה אם נשלחה
+    const filter = year ? { year } : {};
 
     const projects = await Project.find(filter)
       .skip(page * pageSize)
       .limit(pageSize);
-
     const totalProjects = await Project.countDocuments(filter);
-
     const nextPage = (page + 1) * pageSize < totalProjects ? page + 1 : null;
 
     res.status(200).json({ projects, nextPage });
@@ -80,24 +75,37 @@ export const getProjectById = async (req, res) => {
 
 export const createProject = async (req, res) => {
   try {
-    const { name, internship, description, instructor, year, members } =
-      req.body;
+    const {
+      name,
+      internship,
+      description,
+      short_description,
+      gallery,
+      youtube,
+      instructor,
+      year,
+      members,
+    } = req.body;
+
     const parsedMembers =
       typeof members === "string" ? JSON.parse(members) : members;
+    const parsedGallery =
+      typeof gallery === "string" ? JSON.parse(gallery) : gallery;
 
     if (!req.file) {
       return res.status(400).json({ message: "Image is required." });
     }
 
-    // Upload image buffer to Cloudinary
     const result = await streamUpload(req.file.buffer);
     const imageUrl = result.secure_url;
 
-    // Create a new project document
     const newProject = new Project({
       name,
       internship,
       description,
+      short_description,
+      gallery: parsedGallery,
+      youtube,
       instructor,
       year,
       image: imageUrl,
@@ -115,17 +123,26 @@ export const createProject = async (req, res) => {
 export const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, internship, description, instructor, year } = req.body;
+    const {
+      name,
+      internship,
+      description,
+      short_description,
+      gallery,
+      youtube,
+      instructor,
+      year,
+    } = req.body;
     const members = JSON.parse(req.body.members || "[]");
+    const parsedGallery =
+      typeof gallery === "string" ? JSON.parse(gallery) : gallery;
 
     const existingProject = await Project.findById(id);
     if (!existingProject) {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    // ✅ בדיקת הרשאה – Admin יכול הכל
     const user = req.user;
-    console.log("User from request:", user);
     const isAdmin = user?.role === "admin";
 
     if (!isAdmin) {
@@ -149,6 +166,9 @@ export const updateProject = async (req, res) => {
     existingProject.name = name;
     existingProject.internship = internship;
     existingProject.description = description;
+    existingProject.short_description = short_description;
+    existingProject.gallery = parsedGallery;
+    existingProject.youtube = youtube;
     existingProject.instructor = instructor;
     existingProject.year = year;
     existingProject.members = members;

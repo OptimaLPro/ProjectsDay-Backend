@@ -13,8 +13,6 @@ import { ensureUserMiddleware } from "../middlewares/ensureUserMiddleware.js";
 
 const router = Router();
 
-// router.use(ensureUserMiddleware);
-
 router.get("/", getProjects);
 router.get("/all", getAllProjects);
 router.get("/:id", getProjectById);

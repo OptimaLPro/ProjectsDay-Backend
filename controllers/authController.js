@@ -102,7 +102,7 @@ export const bulkRegister = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password"); // לא נשלח סיסמה
+    const users = await User.find().select("-password");
     res.json(users);
   } catch (err) {
     res.status(500).json({ error: "Server error" });
@@ -122,7 +122,7 @@ export const updateUser = async (req, res) => {
     user.internship = internship || user.internship;
 
     if (password && password.trim() !== "") {
-      user.password = password; // יעבור הצפנה דרך pre("save")
+      user.password = password;
     }
 
     await user.save();
