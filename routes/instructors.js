@@ -3,6 +3,7 @@ import {
   getInstructors,
   createInstructor,
   updateInstructor,
+  getInstructorById,
 } from "../controllers/instructorsController.js";
 import multer from "multer";
 
@@ -14,5 +15,6 @@ const router = Router();
 router.get("/", getInstructors);
 router.post("/", createInstructor);
 router.put("/:id", upload.single("image"), updateInstructor);
+router.get("/:id", getInstructorById);
 
 export default router;
