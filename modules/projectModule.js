@@ -15,6 +15,7 @@ const projectSchema = new mongoose.Schema({
   youtube: { type: String },
   instructor: { type: String, required: true },
   members: [memberSchema],
+  awards: [{ type: mongoose.Schema.Types.ObjectId, ref: "awards" }],
   year: { type: Number, required: true },
 });
 

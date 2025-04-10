@@ -34,6 +34,7 @@ export const getProjects = async (req, res) => {
     const filter = year ? { year } : {};
 
     const projects = await Project.find(filter)
+      .populate("awards")
       .skip(page * pageSize)
       .limit(pageSize);
     const totalProjects = await Project.countDocuments(filter);
@@ -48,7 +49,7 @@ export const getProjects = async (req, res) => {
 
 export const getAllProjects = async (req, res) => {
   try {
-    const projects = await Project.find({});
+    const projects = await Project.find({}).populate("awards");
     if (!projects || projects.length === 0) {
       return res.status(404).send("No projects found.");
     }
@@ -62,7 +63,7 @@ export const getAllProjects = async (req, res) => {
 export const getProjectById = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = await Project.findById(id);
+    const project = await Project.findById(id).populate("awards");
     if (!project) {
       return res.status(404).send("Project not found.");
     }
@@ -85,12 +86,15 @@ export const createProject = async (req, res) => {
       instructor,
       year,
       members,
+      awards,
     } = req.body;
 
     const parsedMembers =
       typeof members === "string" ? JSON.parse(members) : members;
     const parsedGallery =
       typeof gallery === "string" ? JSON.parse(gallery) : gallery;
+    const parsedAwards =
+      typeof awards === "string" ? JSON.parse(awards) : awards;
 
     if (!req.file) {
       return res.status(400).json({ message: "Image is required." });
@@ -110,6 +114,7 @@ export const createProject = async (req, res) => {
       year,
       image: imageUrl,
       members: parsedMembers,
+      awards: parsedAwards,
     });
 
     await newProject.save();
@@ -137,6 +142,10 @@ export const updateProject = async (req, res) => {
     const members = JSON.parse(req.body.members || "[]");
     const parsedGallery =
       typeof gallery === "string" ? JSON.parse(gallery) : gallery;
+    const parsedAwards =
+      typeof req.body.awards === "string"
+        ? JSON.parse(req.body.awards)
+        : req.body.awards || [];
 
     const existingProject = await Project.findById(id);
     if (!existingProject) {
@@ -178,7 +187,10 @@ export const updateProject = async (req, res) => {
         try {
           await cloudinary.uploader.destroy(publicId);
         } catch (err) {
-          console.warn(`Failed to delete image from Cloudinary: ${publicId}`, err);
+          console.warn(
+            `Failed to delete image from Cloudinary: ${publicId}`,
+            err
+          );
         }
       }
     }
@@ -199,10 +211,7 @@ export const updateProject = async (req, res) => {
         uploadedImages.push(result.secure_url);
       }
 
-      existingProject.gallery = [
-        ...existingProject.gallery,
-        ...uploadedImages,
-      ];
+      existingProject.gallery = [...existingProject.gallery, ...uploadedImages];
     }
 
     existingProject.name = name;
@@ -211,6 +220,7 @@ export const updateProject = async (req, res) => {
     existingProject.short_description = short_description;
     existingProject.youtube = youtube;
     existingProject.instructor = instructor;
+    existingProject.awards = parsedAwards;
     existingProject.year = year;
     existingProject.members = members;
     existingProject.image = imageUrl;
@@ -239,7 +249,6 @@ function extractCloudinaryPublicId(url) {
     return null;
   }
 }
-
 
 export const getMyProject = async (req, res) => {
   try {
