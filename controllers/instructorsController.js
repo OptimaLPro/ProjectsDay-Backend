@@ -1,5 +1,27 @@
 import Instructor from "../modules/instructorModule.js";
 
+import { v2 as cloudinary } from "cloudinary";
+import streamifier from "streamifier";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const streamUpload = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "instructors" },
+      (error, result) => {
+        if (result) resolve(result);
+        else reject(error);
+      }
+    );
+    streamifier.createReadStream(buffer).pipe(stream);
+  });
+};
+
 export const getInstructors = async (req, res) => {
   try {
     const { year } = req.query;
@@ -21,7 +43,7 @@ export const createInstructor = async (req, res) => {
       name,
       image,
       description,
-      years, // ⬅️ שלח מערך כמו [2025, 2026]
+      years,
     });
 
     await instructor.save();
@@ -35,15 +57,26 @@ export const createInstructor = async (req, res) => {
 export const updateInstructor = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, image, description, years } = req.body;
 
-    if (!name || !image || !description || !Array.isArray(years)) {
+    // בקריאה עם form-data, req.body מגיע כ־stringים
+    const { name, description } = req.body;
+    const years = JSON.parse(req.body.years || "[]");
+
+    if (!name || !description || !Array.isArray(years)) {
       return res.status(400).json({ message: "Missing or invalid data" });
+    }
+
+    // תמונה קיימת או העלאה חדשה
+    let imageUrl = req.body.image;
+
+    if (req.file) {
+      const result = await streamUpload(req.file.buffer);
+      imageUrl = result.secure_url;
     }
 
     const updated = await Instructor.findByIdAndUpdate(
       id,
-      { name, image, description, years },
+      { name, description, years, image: imageUrl },
       { new: true }
     );
 
@@ -57,3 +90,4 @@ export const updateInstructor = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
