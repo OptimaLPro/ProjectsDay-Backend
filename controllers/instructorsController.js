@@ -37,13 +37,14 @@ export const getInstructors = async (req, res) => {
 
 export const createInstructor = async (req, res) => {
   try {
-    const { name, image, description, years } = req.body;
+    const { name, image, description, years, internships } = req.body;
 
     const instructor = new Instructor({
       name,
       image,
       description,
       years,
+      internships: internships || [],
     });
 
     await instructor.save();
@@ -58,15 +59,14 @@ export const updateInstructor = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // בקריאה עם form-data, req.body מגיע כ־stringים
-    const { name, description } = req.body;
+    const { name, description, internships } = req.body;
     const years = JSON.parse(req.body.years || "[]");
+    const internshipsArray = JSON.parse(internships || "[]");
 
     if (!name || !description || !Array.isArray(years)) {
       return res.status(400).json({ message: "Missing or invalid data" });
     }
 
-    // תמונה קיימת או העלאה חדשה
     let imageUrl = req.body.image;
 
     if (req.file) {
@@ -76,7 +76,13 @@ export const updateInstructor = async (req, res) => {
 
     const updated = await Instructor.findByIdAndUpdate(
       id,
-      { name, description, years, image: imageUrl },
+      {
+        name,
+        description,
+        years,
+        internships: internshipsArray,
+        image: imageUrl,
+      },
       { new: true }
     );
 

@@ -23,6 +23,7 @@ const instructorSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    internships: { type: [String], default: [] },
   },
   { timestamps: true }
 );
