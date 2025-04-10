@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
 import streamifier from "streamifier";
+import Yearbook from "../modules/yearbookModule.js";
 
 dotenv.config();
 
@@ -63,6 +64,17 @@ export const login = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    console.log("User found:", user);
+
+    if (user.role !== "admin") {
+      const activeYearbook = await Yearbook.findOne({ active: true });
+      if (!activeYearbook || user.year !== activeYearbook.year) {
+        return res.status(403).json({
+          error: `You do not belong to the active yearbook (${activeYearbook?.year}).`,
+        });
+      }
     }
 
     const token = createToken(user);

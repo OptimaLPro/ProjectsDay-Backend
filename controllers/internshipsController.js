@@ -14,13 +14,13 @@ export const getInternships = async (req, res) => {
 
 export const createInternship = async (req, res) => {
   try {
-    const { name, years } = req.body;
+    const { name, instructor, description, years } = req.body;
 
-    if (!name || !years || !Array.isArray(years)) {
+    if (!name || !instructor || !description || !Array.isArray(years)) {
       return res.status(400).json({ error: "Missing or invalid data" });
     }
 
-    const internship = new Internship({ name, years });
+    const internship = new Internship({ name, years, instructor, description });
     await internship.save();
     res.status(201).json(internship);
   } catch (error) {
@@ -32,15 +32,21 @@ export const createInternship = async (req, res) => {
 export const updateInternship = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, years } = req.body;
+    const { name, years, instructor, description } = req.body;
 
-    if (!name || !years || !Array.isArray(years)) {
+    if (
+      !name ||
+      !years ||
+      !Array.isArray(years) ||
+      !instructor ||
+      !description
+    ) {
       return res.status(400).json({ error: "Missing or invalid data" });
     }
 
     const updated = await Internship.findByIdAndUpdate(
       id,
-      { name, years },
+      { name, years, instructor, description },
       { new: true }
     );
 
@@ -51,6 +57,22 @@ export const updateInternship = async (req, res) => {
     res.status(200).json(updated);
   } catch (error) {
     console.error("Error updating internship:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const deleteInternship = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const internship = await Internship.findById(id);
+    if (!internship) {
+      return res.status(404).json({ error: "Internship not found" });
+    }
+
+    await Internship.findByIdAndDelete(id);
+    res.status(200).json({ message: "Internship deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting internship:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

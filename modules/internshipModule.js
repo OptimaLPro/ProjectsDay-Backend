@@ -11,6 +11,14 @@ const internshipSchema = new mongoose.Schema(
       required: true,
       default: [],
     },
+    instructor: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

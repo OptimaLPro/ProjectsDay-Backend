@@ -3,6 +3,7 @@ import {
   getInternships,
   createInternship,
   updateInternship,
+  deleteInternship,
 } from "../controllers/internshipsController.js";
 
 const router = Router();
@@ -10,5 +11,6 @@ const router = Router();
 router.get("/", getInternships);
 router.post("/", createInternship);
 router.put("/:id", updateInternship);
+router.delete("/:id", deleteInternship);
 
 export default router;
