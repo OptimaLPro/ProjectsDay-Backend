@@ -1,6 +1,9 @@
 import User from "../modules/userModule.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { v2 as cloudinary } from "cloudinary";
+import streamifier from "streamifier";
+
 dotenv.config();
 
 const createToken = (user) => {
@@ -13,14 +16,26 @@ const createToken = (user) => {
       year: user.year,
     },
     process.env.JWT_SECRET,
-    {
-      expiresIn: "7d",
-    }
+    { expiresIn: "7d" }
   );
 };
 
+const streamUpload = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "users" },
+      (error, result) => {
+        if (result) resolve(result);
+        else reject(error);
+      }
+    );
+    streamifier.createReadStream(buffer).pipe(stream);
+  });
+};
+
 export const register = async (req, res) => {
-  const { email, password, role, internship } = req.body;
+  const { email, password, role, internship, image } = req.body;
+
   try {
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ error: "Email already in use" });
@@ -30,10 +45,10 @@ export const register = async (req, res) => {
       password,
       role: role || "student",
       internship: internship || "",
+      image: image || "",
     });
 
     await user.save();
-
     const token = createToken(user);
     res.json({ token });
   } catch (err) {
@@ -58,20 +73,16 @@ export const login = async (req, res) => {
 };
 
 export const bulkRegister = async (req, res) => {
-  const users = req.body; // [{email, password, role, internship}]
+  const users = req.body;
   if (!Array.isArray(users)) {
     return res.status(400).json({ error: "Expected an array of users" });
   }
 
-  const results = {
-    created: [],
-    skipped: [],
-    errors: [],
-  };
+  const results = { created: [], skipped: [], errors: [] };
 
   for (const userData of users) {
     try {
-      const { email, password, role, internship } = userData;
+      const { email, password, role, internship, image } = userData;
       if (!email || !password) {
         results.errors.push({ email, error: "Missing email or password" });
         continue;
@@ -88,6 +99,7 @@ export const bulkRegister = async (req, res) => {
         password,
         role: role || "student",
         internship: internship || "",
+        image: image || "",
       });
 
       await newUser.save();
@@ -125,6 +137,11 @@ export const updateUser = async (req, res) => {
       user.password = password;
     }
 
+    if (req.file) {
+      const result = await streamUpload(req.file.buffer);
+      user.image = result.secure_url;
+    }
+
     await user.save();
     res.json({ message: "User updated successfully" });
   } catch (err) {
@@ -145,13 +162,11 @@ export const deleteUser = async (req, res) => {
 export const getUsersByEmails = async (req, res) => {
   try {
     const { emails } = req.query;
-
     if (!emails) {
       return res.status(400).json({ error: "Missing emails parameter" });
     }
 
     const emailArray = Array.isArray(emails) ? emails : emails.split(",");
-
     const users = await User.find({ email: { $in: emailArray } }).select(
       "email image"
     );

@@ -21,6 +21,7 @@ const userSchema = new Schema(
       type: Number,
       default: new Date().getFullYear(),
     },
+    image: { type: String, default: "" },
   },
   { timestamps: true }
 );

@@ -133,6 +133,7 @@ export const updateProject = async (req, res) => {
       instructor,
       year,
     } = req.body;
+
     const members = JSON.parse(req.body.members || "[]");
     const parsedGallery =
       typeof gallery === "string" ? JSON.parse(gallery) : gallery;
@@ -163,11 +164,51 @@ export const updateProject = async (req, res) => {
       imageUrl = result.secure_url;
     }
 
+    // מחיקת תמונות מה-Gallery גם מ-Cloudinary
+    const previousGallery = existingProject.gallery || [];
+    const updatedGallery = parsedGallery || [];
+
+    const removedImages = previousGallery.filter(
+      (url) => !updatedGallery.includes(url)
+    );
+
+    for (const url of removedImages) {
+      const publicId = extractCloudinaryPublicId(url);
+      if (publicId) {
+        try {
+          await cloudinary.uploader.destroy(publicId);
+        } catch (err) {
+          console.warn(`Failed to delete image from Cloudinary: ${publicId}`, err);
+        }
+      }
+    }
+
+    // עדכון הגלריה החדשה
+    existingProject.gallery = updatedGallery;
+
+    // הוספת תמונות חדשות אם קיימות
+    if (req.files?.newGalleryFiles) {
+      const uploadedImages = [];
+
+      const files = Array.isArray(req.files.newGalleryFiles)
+        ? req.files.newGalleryFiles
+        : [req.files.newGalleryFiles];
+
+      for (const file of files) {
+        const result = await streamUpload(file.buffer);
+        uploadedImages.push(result.secure_url);
+      }
+
+      existingProject.gallery = [
+        ...existingProject.gallery,
+        ...uploadedImages,
+      ];
+    }
+
     existingProject.name = name;
     existingProject.internship = internship;
     existingProject.description = description;
     existingProject.short_description = short_description;
-    existingProject.gallery = parsedGallery;
     existingProject.youtube = youtube;
     existingProject.instructor = instructor;
     existingProject.year = year;
@@ -181,6 +222,24 @@ export const updateProject = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+function extractCloudinaryPublicId(url) {
+  try {
+    const parts = url.split("/");
+    const uploadIndex = parts.findIndex((p) => p === "upload");
+    if (uploadIndex === -1) return null;
+
+    const publicIdParts = parts.slice(uploadIndex + 1);
+    const lastPart = publicIdParts[publicIdParts.length - 1];
+    const withoutExtension = lastPart.split(".")[0];
+    publicIdParts[publicIdParts.length - 1] = withoutExtension;
+
+    return publicIdParts.join("/");
+  } catch (e) {
+    return null;
+  }
+}
+
 
 export const getMyProject = async (req, res) => {
   try {
