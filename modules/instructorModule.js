@@ -19,6 +19,10 @@ const instructorSchema = new mongoose.Schema(
       required: true,
       default: [],
     },
+    image: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );

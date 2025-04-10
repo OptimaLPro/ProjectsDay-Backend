@@ -132,13 +132,33 @@ export const updateUser = async (req, res) => {
   }
 };
 
-
 export const deleteUser = async (req, res) => {
   const { id } = req.params;
   try {
     await User.findByIdAndDelete(id);
     res.json({ message: "User deleted successfully" });
   } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const getUsersByEmails = async (req, res) => {
+  try {
+    const { emails } = req.query;
+
+    if (!emails) {
+      return res.status(400).json({ error: "Missing emails parameter" });
+    }
+
+    const emailArray = Array.isArray(emails) ? emails : emails.split(",");
+
+    const users = await User.find({ email: { $in: emailArray } }).select(
+      "email image"
+    );
+
+    res.json(users);
+  } catch (err) {
+    console.error("Error fetching users by emails:", err);
     res.status(500).json({ error: "Server error" });
   }
 };
