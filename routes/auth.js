@@ -3,6 +3,7 @@ import multer from "multer";
 import {
   bulkRegister,
   deleteUser,
+  getAllUserEmails,
   getAllUsers,
   getUsersByEmails,
   login,
@@ -21,5 +22,6 @@ router.post("/bulk-register", bulkRegister);
 router.put("/users/:id", upload.single("image"), updateUser);
 router.delete("/users/:id", deleteUser);
 router.get("/users/by-emails", getUsersByEmails);
+router.get("/emails", getAllUserEmails);
 
 export default router;

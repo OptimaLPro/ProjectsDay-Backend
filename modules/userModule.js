@@ -6,21 +6,17 @@ const userSchema = new Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
 
+    first_name: { type: String, default: "" },
+    last_name: { type: String, default: "" },
+
     role: {
       type: String,
       enum: ["student", "instructor", "admin"],
       default: "student",
     },
 
-    internship: {
-      type: String,
-      default: "",
-    },
-
-    year: {
-      type: Number,
-      default: new Date().getFullYear(),
-    },
+    internship: { type: String, default: "" },
+    year: { type: Number, default: new Date().getFullYear() },
     image: { type: String, default: "" },
   },
   { timestamps: true }

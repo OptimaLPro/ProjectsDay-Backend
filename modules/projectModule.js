@@ -1,10 +1,5 @@
 import mongoose from "mongoose";
 
-const memberSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-});
-
 const projectSchema = new mongoose.Schema({
   name: { type: String, required: true },
   image: { type: String, required: true },
@@ -14,7 +9,7 @@ const projectSchema = new mongoose.Schema({
   gallery: [{ type: String }],
   youtube: { type: String },
   instructor: { type: String, required: true },
-  members: [memberSchema],
+  members: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
   awards: [{ type: mongoose.Schema.Types.ObjectId, ref: "awards" }],
   year: { type: Number, required: true },
 });

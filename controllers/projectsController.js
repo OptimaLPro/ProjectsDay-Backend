@@ -156,9 +156,9 @@ export const updateProject = async (req, res) => {
     const isAdmin = user?.role === "admin";
 
     if (!isAdmin) {
-      const userEmail = user?.email;
+      const userId = user?._id || user?.id;
       const isAuthorized = existingProject.members.some(
-        (member) => member.email === userEmail
+        (memberId) => memberId.toString() === userId
       );
       if (!isAuthorized) {
         return res
@@ -252,13 +252,14 @@ function extractCloudinaryPublicId(url) {
 
 export const getMyProject = async (req, res) => {
   try {
+    console.log(req.user);
     const userEmail = req.user?.email;
     if (!userEmail) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
     const project = await Project.findOne({
-      "members.email": userEmail,
+      members: req.user._id,
     });
 
     if (!project) {

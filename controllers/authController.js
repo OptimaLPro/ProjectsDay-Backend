@@ -10,11 +10,13 @@ dotenv.config();
 const createToken = (user) => {
   return jwt.sign(
     {
-      id: user._id,
+      _id: user._id,
       email: user.email,
       role: user.role,
       internship: user.internship,
       year: user.year,
+      first_name: user.first_name,
+      last_name: user.last_name,
     },
     process.env.JWT_SECRET,
     { expiresIn: "7d" }
@@ -35,7 +37,7 @@ const streamUpload = (buffer) => {
 };
 
 export const register = async (req, res) => {
-  const { email, password, role, internship, image } = req.body;
+  const { email, password, role, internship, image, first_name, last_name } = req.body;
 
   try {
     const exists = await User.findOne({ email });
@@ -47,6 +49,8 @@ export const register = async (req, res) => {
       role: role || "student",
       internship: internship || "",
       image: image || "",
+      first_name: first_name || "",
+      last_name: last_name || "",
     });
 
     await user.save();
@@ -65,8 +69,6 @@ export const login = async (req, res) => {
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-
-    console.log("User found:", user);
 
     if (user.role !== "admin") {
       const activeYearbook = await Yearbook.findOne({ active: true });
@@ -94,7 +96,7 @@ export const bulkRegister = async (req, res) => {
 
   for (const userData of users) {
     try {
-      const { email, password, role, internship, image } = userData;
+      const { email, password, role, internship, image, first_name, last_name } = userData;
       if (!email || !password) {
         results.errors.push({ email, error: "Missing email or password" });
         continue;
@@ -112,6 +114,8 @@ export const bulkRegister = async (req, res) => {
         role: role || "student",
         internship: internship || "",
         image: image || "",
+        first_name: first_name || "",
+        last_name: last_name || "",
       });
 
       await newUser.save();
@@ -135,7 +139,7 @@ export const getAllUsers = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { email, password, role, internship } = req.body;
+  const { email, password, role, internship, first_name, last_name } = req.body;
 
   try {
     const user = await User.findById(id);
@@ -144,6 +148,8 @@ export const updateUser = async (req, res) => {
     user.email = email || user.email;
     user.role = role || user.role;
     user.internship = internship || user.internship;
+    user.first_name = first_name || user.first_name;
+    user.last_name = last_name || user.last_name;
 
     if (password && password.trim() !== "") {
       user.password = password;
@@ -186,6 +192,16 @@ export const getUsersByEmails = async (req, res) => {
     res.json(users);
   } catch (err) {
     console.error("Error fetching users by emails:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const getAllUserEmails = async (req, res) => {
+  try {
+    const users = await User.find({}, "email first_name last_name image internship year");
+    res.json(users);
+  } catch (err) {
+    console.error("Error fetching user emails:", err);
     res.status(500).json({ error: "Server error" });
   }
 };
