@@ -15,7 +15,12 @@ const userSchema = new Schema(
       default: "student",
     },
 
-    internship: { type: String, default: "" },
+    internship: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "internships",
+      default: null,
+    },
+
     year: { type: Number, default: new Date().getFullYear() },
     image: { type: String, default: "" },
   },

@@ -2,6 +2,7 @@ import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
 import streamifier from "streamifier";
 import Project from "../modules/projectModule.js";
+import mongoose from "mongoose";
 
 // Cloudinary config
 cloudinary.config({
@@ -127,6 +128,7 @@ export const createProject = async (req, res) => {
 
 export const updateProject = async (req, res) => {
   try {
+    console.log("Update project request body:", req.body);
     const { id } = req.params;
     const {
       name,
@@ -173,6 +175,8 @@ export const updateProject = async (req, res) => {
       imageUrl = result.secure_url;
     }
 
+    console.log("DEBUG 0");
+
     // מחיקת תמונות מה-Gallery גם מ-Cloudinary
     const previousGallery = existingProject.gallery || [];
     const updatedGallery = parsedGallery || [];
@@ -195,6 +199,8 @@ export const updateProject = async (req, res) => {
       }
     }
 
+    console.log("DEBUG 1");
+
     // עדכון הגלריה החדשה
     existingProject.gallery = updatedGallery;
 
@@ -215,16 +221,24 @@ export const updateProject = async (req, res) => {
     }
 
     existingProject.name = name;
-    existingProject.internship = internship;
+    existingProject.internship = mongoose.Types.ObjectId.isValid(internship)
+    ? new mongoose.Types.ObjectId(internship)
+    : existingProject.internship;
+  
+  existingProject.instructor = mongoose.Types.ObjectId.isValid(instructor)
+    ? new mongoose.Types.ObjectId(instructor)
+    : existingProject.instructor;
+  
+    
     existingProject.description = description;
     existingProject.short_description = short_description;
     existingProject.youtube = youtube;
-    existingProject.instructor = instructor;
     existingProject.awards = parsedAwards;
     existingProject.year = year;
     existingProject.members = members;
     existingProject.image = imageUrl;
-
+    
+    console.log(existingProject);
     await existingProject.save();
     res.status(200).json(existingProject);
   } catch (error) {
@@ -295,6 +309,61 @@ export const deleteProject = async (req, res) => {
     res.status(200).json({ message: "Project deleted successfully" });
   } catch (error) {
     console.error("Error deleting project:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const assignProject = async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const userId = req.user._id;
+
+    const existingProject = await Project.findOne({ members: userId });
+    if (existingProject) {
+      return res
+        .status(400)
+        .json({ message: "You are already assigned to another project" });
+    }
+
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    console.log("User ID:", userId);
+    console.log("Project ID:", projectId);
+    console.log("Project members before assignment:", project.members);
+
+    project.members.push(userId);
+    await project.save();
+
+    res.status(200).json({ message: "User assigned successfully", project });
+  } catch (error) {
+    console.error("Error assigning user to project:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const unassignProject = async (req, res) => {
+  try {
+    console.log(req.user);
+    const userId = req.user._id;
+
+    const project = await Project.findOne({ members: userId });
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    project.members = project.members.filter(
+      (id) => id.toString() !== userId.toString()
+    );
+
+    await project.save();
+    console.log("✅ Before save - members:", project.members);
+
+    res.status(200).json({ message: "You have been removed from the project" });
+  } catch (error) {
+    console.error("Error unassigning project:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

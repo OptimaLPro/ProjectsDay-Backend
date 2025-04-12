@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import User from "../modules/userModule.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -37,7 +38,8 @@ const streamUpload = (buffer) => {
 };
 
 export const register = async (req, res) => {
-  const { email, password, role, internship, image, first_name, last_name } = req.body;
+  const { email, password, role, internship, image, first_name, last_name } =
+    req.body;
 
   try {
     const exists = await User.findOne({ email });
@@ -47,7 +49,10 @@ export const register = async (req, res) => {
       email,
       password,
       role: role || "student",
-      internship: internship || "",
+      internship: mongoose.Types.ObjectId.isValid(internship)
+        ? mongoose.Types.ObjectId.createFromHexString(internship)
+        : null,
+
       image: image || "",
       first_name: first_name || "",
       last_name: last_name || "",
@@ -96,7 +101,15 @@ export const bulkRegister = async (req, res) => {
 
   for (const userData of users) {
     try {
-      const { email, password, role, internship, image, first_name, last_name } = userData;
+      const {
+        email,
+        password,
+        role,
+        internship,
+        image,
+        first_name,
+        last_name,
+      } = userData;
       if (!email || !password) {
         results.errors.push({ email, error: "Missing email or password" });
         continue;
@@ -112,7 +125,7 @@ export const bulkRegister = async (req, res) => {
         email,
         password,
         role: role || "student",
-        internship: internship || "",
+        internship: internship ? new mongoose.Types.ObjectId(internship) : null,
         image: image || "",
         first_name: first_name || "",
         last_name: last_name || "",
@@ -142,12 +155,18 @@ export const updateUser = async (req, res) => {
   const { email, password, role, internship, first_name, last_name } = req.body;
 
   try {
+    console.log("req.body:", req.body);
+
     const user = await User.findById(id);
     if (!user) return res.status(404).json({ error: "User not found" });
 
     user.email = email || user.email;
     user.role = role || user.role;
-    user.internship = internship || user.internship;
+
+    user.internship = mongoose.Types.ObjectId.isValid(internship)
+      ? mongoose.Types.ObjectId.createFromHexString(internship)
+      : user.internship;
+
     user.first_name = first_name || user.first_name;
     user.last_name = last_name || user.last_name;
 
@@ -163,6 +182,7 @@ export const updateUser = async (req, res) => {
     await user.save();
     res.json({ message: "User updated successfully" });
   } catch (err) {
+    console.error("Update user error:", err);
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -198,7 +218,10 @@ export const getUsersByEmails = async (req, res) => {
 
 export const getAllUserEmails = async (req, res) => {
   try {
-    const users = await User.find({}, "email first_name last_name image internship year");
+    const users = await User.find(
+      {},
+      "email first_name last_name image internship year"
+    );
     res.json(users);
   } catch (err) {
     console.error("Error fetching user emails:", err);

@@ -8,7 +8,7 @@ const instructorSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      required: true,
+      default: "",
     },
     description: {
       type: String,
@@ -19,11 +19,13 @@ const instructorSchema = new mongoose.Schema(
       required: true,
       default: [],
     },
-    image: {
-      type: String,
-      default: "",
-    },
-    internships: { type: [String], default: [] },
+    internships: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "internships",
+        default: [],
+      },
+    ],
   },
   { timestamps: true }
 );

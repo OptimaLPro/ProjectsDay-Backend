@@ -12,7 +12,8 @@ const internshipSchema = new mongoose.Schema(
       default: [],
     },
     instructor: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "instructors",
       required: true,
     },
     description: {
