@@ -177,7 +177,6 @@ export const updateProject = async (req, res) => {
 
     console.log("DEBUG 0");
 
-    // מחיקת תמונות מה-Gallery גם מ-Cloudinary
     const previousGallery = existingProject.gallery || [];
     const updatedGallery = parsedGallery || [];
 
@@ -201,10 +200,8 @@ export const updateProject = async (req, res) => {
 
     console.log("DEBUG 1");
 
-    // עדכון הגלריה החדשה
     existingProject.gallery = updatedGallery;
 
-    // הוספת תמונות חדשות אם קיימות
     if (req.files?.newGalleryFiles) {
       const uploadedImages = [];
 
