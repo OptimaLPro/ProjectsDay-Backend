@@ -20,7 +20,14 @@ router.get("/all", getAllProjects);
 router.get("/mine/check", ensureUserMiddleware, getMyProject);
 router.get("/:id", getProjectById);
 
-router.post("/create", upload.single("image"), createProject);
+router.post(
+  "/create",
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "newGalleryFiles", maxCount: 10 },
+  ]),
+  createProject
+);
 
 router.put("/unassign", ensureUserMiddleware, unassignProject);
 router.put("/:id/assign", ensureUserMiddleware, assignProject);

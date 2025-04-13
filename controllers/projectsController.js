@@ -84,24 +84,42 @@ export const createProject = async (req, res) => {
       short_description,
       gallery,
       youtube,
-      instructor,
+      instructor, // זה מגיע כשם (string)
       year,
       members,
       awards,
     } = req.body;
 
-    const parsedMembers =
-      typeof members === "string" ? JSON.parse(members) : members;
     const parsedGallery =
       typeof gallery === "string" ? JSON.parse(gallery) : gallery;
     const parsedAwards =
       typeof awards === "string" ? JSON.parse(awards) : awards;
+    const parsedMembers =
+      typeof members === "string" ? JSON.parse(members) : members;
 
-    if (!req.file) {
+    // 🟢 המר את האימיילים ל־ObjectId של המשתמשים
+    const memberEmails = parsedMembers.map((m) => m.email || m);
+    const userDocs = await User.find({ email: { $in: memberEmails } });
+    const memberObjectIds = userDocs.map((u) => u._id);
+
+    // 🟢 המר את שם המרצה ל־ObjectId
+    const instructorDoc = await mongoose
+      .model("instructors") // אם זה המודל שלך, אחרת תייבא Instructor
+      .findOne({ name: instructor });
+
+    if (!instructorDoc) {
+      return res.status(400).json({ message: "Instructor not found." });
+    }
+
+    const instructorId = instructorDoc._id;
+
+    // 🟢 טפל בתמונה
+    const imageFile = req.files?.image?.[0];
+    if (!imageFile) {
       return res.status(400).json({ message: "Image is required." });
     }
 
-    const result = await streamUpload(req.file.buffer);
+    const result = await streamUpload(imageFile.buffer);
     const imageUrl = result.secure_url;
 
     const newProject = new Project({
@@ -111,10 +129,10 @@ export const createProject = async (req, res) => {
       short_description,
       gallery: parsedGallery,
       youtube,
-      instructor,
+      instructor: instructorId,
       year,
       image: imageUrl,
-      members: parsedMembers,
+      members: memberObjectIds,
       awards: parsedAwards,
     });
 
