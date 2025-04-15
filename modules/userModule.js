@@ -23,6 +23,10 @@ const userSchema = new Schema(
 
     year: { type: Number, default: new Date().getFullYear() },
     image: { type: String, default: "" },
+    linkedin: { type: String, default: "" },
+    github: { type: String, default: "" },
+    website: { type: String, default: "" },
+    about: { type: String, maxlength: 500, default: "" },
   },
   { timestamps: true }
 );

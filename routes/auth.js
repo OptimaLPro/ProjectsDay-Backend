@@ -5,6 +5,7 @@ import {
   deleteUser,
   getAllUserEmails,
   getAllUsers,
+  getUserById,
   getUsersByEmails,
   login,
   register,
@@ -23,5 +24,6 @@ router.put("/users/:id", upload.single("image"), updateUser);
 router.delete("/users/:id", deleteUser);
 router.get("/users/by-emails", getUsersByEmails);
 router.get("/emails", getAllUserEmails);
+router.get("/users/:id", getUserById);
 
 export default router;

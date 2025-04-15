@@ -18,6 +18,11 @@ const createToken = (user) => {
       year: user.year,
       first_name: user.first_name,
       last_name: user.last_name,
+      image: user.image,
+      linkedin: user.linkedin,
+      github: user.github,
+      website: user.website,
+      about: user.about,
     },
     process.env.JWT_SECRET,
     { expiresIn: "7d" }
@@ -56,6 +61,10 @@ export const register = async (req, res) => {
       image: image || "",
       first_name: first_name || "",
       last_name: last_name || "",
+      linkedin: req.body.linkedin || "",
+      github: req.body.github || "",
+      website: req.body.website || "",
+      about: req.body.about || "",
     });
 
     await user.save();
@@ -152,7 +161,18 @@ export const getAllUsers = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { email, password, role, internship, first_name, last_name } = req.body;
+  const {
+    email,
+    password,
+    role,
+    internship,
+    first_name,
+    last_name,
+    linkedin,
+    github,
+    website,
+    about,
+  } = req.body;
 
   try {
     console.log("req.body:", req.body);
@@ -178,6 +198,11 @@ export const updateUser = async (req, res) => {
       const result = await streamUpload(req.file.buffer);
       user.image = result.secure_url;
     }
+
+    user.linkedin = linkedin ?? user.linkedin;
+    user.github = github ?? user.github;
+    user.website = website ?? user.website;
+    user.about = about ?? user.about;
 
     await user.save();
     res.json({ message: "User updated successfully" });
@@ -225,6 +250,16 @@ export const getAllUserEmails = async (req, res) => {
     res.json(users);
   } catch (err) {
     console.error("Error fetching user emails:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json(user);
+  } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
 };
