@@ -181,7 +181,9 @@ export const updateUser = async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
 
     user.email = email || user.email;
-    user.role = role || user.role;
+    if (user.role === "admin") {
+      user.role = role || user.role;
+    }
 
     user.internship = mongoose.Types.ObjectId.isValid(internship)
       ? mongoose.Types.ObjectId.createFromHexString(internship)
@@ -204,8 +206,11 @@ export const updateUser = async (req, res) => {
     user.website = website ?? user.website;
     user.about = about ?? user.about;
 
+    console.log("user:", user);
+
     await user.save();
-    res.json({ message: "User updated successfully" });
+    const token = createToken(user);
+    res.json({ message: "User updated successfully", user, token });
   } catch (err) {
     console.error("Update user error:", err);
     res.status(500).json({ error: "Server error" });
