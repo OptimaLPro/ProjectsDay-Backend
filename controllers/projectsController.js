@@ -157,15 +157,23 @@ export const updateProject = async (req, res) => {
       youtube,
       instructor,
       year,
+      awards,
     } = req.body;
 
     const members = JSON.parse(req.body.members || "[]");
     const parsedGallery =
       typeof gallery === "string" ? JSON.parse(gallery) : gallery;
-    const parsedAwards =
-      typeof req.body.awards === "string"
-        ? JSON.parse(req.body.awards)
-        : req.body.awards || [];
+
+    let parsedAwards = undefined;
+    if (typeof awards === "string") {
+      try {
+        parsedAwards = JSON.parse(awards);
+      } catch (err) {
+        console.warn("Invalid awards JSON, keeping existing:", awards);
+      }
+    } else if (Array.isArray(awards)) {
+      parsedAwards = awards;
+    }
 
     const existingProject = await Project.findById(id);
     if (!existingProject) {
@@ -188,12 +196,14 @@ export const updateProject = async (req, res) => {
     }
 
     let imageUrl = existingProject.image;
-    if (req.file) {
-      const result = await streamUpload(req.file.buffer);
+    const imageFile = req.files?.image?.[0];
+    if (imageFile) {
+      const result = await streamUpload(imageFile.buffer);
       imageUrl = result.secure_url;
+      console.log("Image URL:", imageUrl);
+    } else {
+      console.log("No image file provided, keeping existing image URL.");
     }
-
-    console.log("DEBUG 0");
 
     const previousGallery = existingProject.gallery || [];
     const updatedGallery = parsedGallery || [];
@@ -216,8 +226,6 @@ export const updateProject = async (req, res) => {
       }
     }
 
-    console.log("DEBUG 1");
-
     existingProject.gallery = updatedGallery;
 
     if (req.files?.newGalleryFiles) {
@@ -237,23 +245,24 @@ export const updateProject = async (req, res) => {
 
     existingProject.name = name;
     existingProject.internship = mongoose.Types.ObjectId.isValid(internship)
-    ? new mongoose.Types.ObjectId(internship)
-    : existingProject.internship;
-  
-  existingProject.instructor = mongoose.Types.ObjectId.isValid(instructor)
-    ? new mongoose.Types.ObjectId(instructor)
-    : existingProject.instructor;
-  
-    
+      ? new mongoose.Types.ObjectId(internship)
+      : existingProject.internship;
+
+    existingProject.instructor = mongoose.Types.ObjectId.isValid(instructor)
+      ? new mongoose.Types.ObjectId(instructor)
+      : existingProject.instructor;
+
     existingProject.description = description;
     existingProject.short_description = short_description;
     existingProject.youtube = youtube;
-    existingProject.awards = parsedAwards;
     existingProject.year = year;
     existingProject.members = members;
     existingProject.image = imageUrl;
-    
-    console.log(existingProject);
+
+    if (parsedAwards !== undefined) {
+      existingProject.awards = parsedAwards;
+    }
+
     await existingProject.save();
     res.status(200).json(existingProject);
   } catch (error) {
@@ -261,6 +270,7 @@ export const updateProject = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 function extractCloudinaryPublicId(url) {
   try {

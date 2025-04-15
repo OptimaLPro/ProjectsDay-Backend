@@ -36,7 +36,7 @@ router.put(
   "/:id",
   ensureUserMiddleware,
   upload.fields([
-    { name: "image", maxCount: 1 },
+    { name: "image", maxCount: 1 },          // Added to allow the "image" field
     { name: "newGalleryFiles", maxCount: 10 },
   ]),
   updateProject
