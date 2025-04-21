@@ -9,6 +9,7 @@ import internshipRouter from "./routes/internships.js";
 import projectRouter from "./routes/projects.js";
 import yearbookRouter from "./routes/yearbooks.js";
 import awardRouter from "./routes/awards.js";
+import { setupSwagger } from "./swagger.js";
 
 const app = express();
 
@@ -20,6 +21,9 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
+
+// Setup Swagger documentation
+setupSwagger(app);
 
 app.get("/hello", (req, res) => {
   res.send("Hello, world!");

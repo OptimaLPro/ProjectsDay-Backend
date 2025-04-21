@@ -101,20 +101,20 @@ export const login = async (req, res) => {
 };
 
 export const bulkRegister = async (req, res) => {
-  const users = req.body;
+  const users = req.body; 
   if (!Array.isArray(users)) {
     return res.status(400).json({ error: "Expected an array of users" });
   }
 
   const results = { created: [], skipped: [], errors: [] };
-
+  console.log(users);
   for (const userData of users) {
     try {
       const {
         email,
         password,
         role,
-        internship,
+        internship = "student",
         image,
         first_name,
         last_name,
@@ -126,19 +126,34 @@ export const bulkRegister = async (req, res) => {
 
       const exists = await User.findOne({ email });
       if (exists) {
+        console.log(`User with email ${email} already exists`);
         results.skipped.push({ email, reason: "Email already exists" });
         continue;
+      }
+
+      //check if internship is a valid (internship is text)
+      if (internship && !mongoose.Types.ObjectId.isValid(internship)) {
+        const internshipExists = await User.findOne({ _id: internship });
+        if (!internshipExists) {
+          results.errors.push({
+            email,
+            error: `Internship ${internship} does not exist`,
+          });
+          continue;
+        }
       }
 
       const newUser = new User({
         email,
         password,
         role: role || "student",
-        internship: internship ? new mongoose.Types.ObjectId(internship) : null,
+        internship: internship,
         image: image || "",
         first_name: first_name || "",
         last_name: last_name || "",
       });
+
+      console.log(newUser);
 
       await newUser.save();
       results.created.push({ email });
@@ -146,7 +161,7 @@ export const bulkRegister = async (req, res) => {
       results.errors.push({ email: userData.email, error: err.message });
     }
   }
-
+  console.log(results);
   return res.status(201).json(results);
 };
 
