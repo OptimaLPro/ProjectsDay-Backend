@@ -27,13 +27,8 @@ export const createYearbook = async (req, res) => {
     if (exists)
       return res.status(400).json({ error: "Yearbook already exists" });
 
-    const yearbook = new Yearbook({
-      year,
-      active,
-    });
-
+    const yearbook = new Yearbook({ year, active });
     await yearbook.save();
-
     res.status(201).json(yearbook);
   } catch (err) {
     console.error(err);
@@ -47,7 +42,6 @@ export const updateYearbook = async (req, res) => {
 
   try {
     if (active) {
-      // Set all other yearbooks' active field to false
       await Yearbook.updateMany({ active: true }, { $set: { active: false } });
     }
 
@@ -64,6 +58,40 @@ export const updateYearbook = async (req, res) => {
     res.status(200).json(updatedYearbook);
   } catch (error) {
     console.error("Error updating yearbook:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const deleteYearbook = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const yearbookToDelete = await Yearbook.findById(id);
+    if (!yearbookToDelete) {
+      return res.status(404).json({ error: "Yearbook not found" });
+    }
+
+    const isActive = yearbookToDelete.active;
+
+    await yearbookToDelete.deleteOne();
+
+    let switchedTo = null;
+
+    if (isActive) {
+      const latest = await Yearbook.findOne().sort({ year: -1 });
+      if (latest) {
+        latest.active = true;
+        await latest.save();
+        switchedTo = latest.year;
+      }
+    }
+
+    res.status(200).json({
+      message: "Yearbook deleted successfully",
+      switchedTo,
+    });
+  } catch (error) {
+    console.error("Error deleting yearbook:", error);
     res.status(500).json({ error: "Server error" });
   }
 };

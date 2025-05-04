@@ -1,5 +1,12 @@
 import { Router } from "express";
-import { getYearbooks, getActiveYearbook, updateYearbook, createYearbook } from "../controllers/yearbooksController.js";
+import {
+  getYearbooks,
+  getActiveYearbook,
+  updateYearbook,
+  createYearbook,
+  deleteYearbook,
+} from "../controllers/yearbooksController.js";
+
 const router = Router();
 
 /**
@@ -54,11 +61,9 @@ router.get("/active", getActiveYearbook); // Get the active yearbook
  *               - year
  *             properties:
  *               year:
- *                 type: string
- *               isActive:
+ *                 type: number
+ *               active:
  *                 type: boolean
- *               description:
- *                 type: string
  *     responses:
  *       201:
  *         description: Yearbook created successfully
@@ -86,15 +91,35 @@ router.post("/", createYearbook); // Create a new yearbook
  *             type: object
  *             properties:
  *               year:
- *                 type: string
- *               isActive:
+ *                 type: number
+ *               active:
  *                 type: boolean
- *               description:
- *                 type: string
  *     responses:
  *       200:
  *         description: Yearbook updated successfully
  */
 router.put("/:id", updateYearbook); // Update a yearbook by ID
+
+/**
+ * @swagger
+ * /api/yearbooks/{id}:
+ *   delete:
+ *     summary: Delete a yearbook
+ *     tags: [Yearbooks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Yearbook deleted successfully
+ *       404:
+ *         description: Yearbook not found
+ */
+router.delete("/:id", deleteYearbook); // Delete a yearbook by ID
 
 export default router;
