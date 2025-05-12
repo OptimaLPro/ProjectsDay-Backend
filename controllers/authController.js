@@ -101,7 +101,7 @@ export const login = async (req, res) => {
 };
 
 export const bulkRegister = async (req, res) => {
-  const users = req.body; 
+  const users = req.body;
   if (!Array.isArray(users)) {
     return res.status(400).json({ error: "Expected an array of users" });
   }
@@ -237,6 +237,15 @@ export const deleteUser = async (req, res) => {
   try {
     await User.findByIdAndDelete(id);
     res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const deleteAllUsers = async (req, res) => {
+  try {
+    await User.deleteMany({});
+    res.json({ message: "All users deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }

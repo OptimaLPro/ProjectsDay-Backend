@@ -10,6 +10,7 @@ import {
   login,
   register,
   updateUser,
+  deleteAllUsers,
 } from "../controllers/authController.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -250,5 +251,21 @@ router.get("/emails", getAllUserEmails);
  *         description: User not found
  */
 router.get("/users/:id", getUserById);
+
+/**
+ * @swagger
+ * /api/auth/users:
+ *  delete:
+ *  summary: Delete all users
+ *  tags: [Users]
+ * security:
+ *  - bearerAuth: []
+ * responses:
+ *  200:
+ *   description: All users deleted successfully
+ *  500:
+ *  description: Server error
+ */
+router.delete("/users", deleteAllUsers);
 
 export default router;
