@@ -3,6 +3,7 @@ import multer from "multer";
 import streamifier from "streamifier";
 import Project from "../modules/projectModule.js";
 import mongoose from "mongoose";
+import User from "../modules/userModule.js";
 
 // Cloudinary config
 cloudinary.config({
