@@ -14,13 +14,22 @@ export const getInternships = async (req, res) => {
 
 export const createInternship = async (req, res) => {
   try {
-    const { name, instructor, description, years } = req.body;
+    const { name, instructor, description, years, textColor, backgroundColor } =
+      req.body;
 
     if (!name || !instructor || !description || !Array.isArray(years)) {
       return res.status(400).json({ error: "Missing or invalid data" });
     }
 
-    const internship = new Internship({ name, years, instructor, description });
+    const internship = new Internship({
+      name,
+      years,
+      instructor,
+      description,
+      textColor,
+      backgroundColor,
+    });
+
     await internship.save();
     res.status(201).json(internship);
   } catch (error) {
@@ -32,7 +41,8 @@ export const createInternship = async (req, res) => {
 export const updateInternship = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, years, instructor, description } = req.body;
+    const { name, years, instructor, description, textColor, backgroundColor } =
+      req.body;
 
     if (
       !name ||
@@ -46,7 +56,7 @@ export const updateInternship = async (req, res) => {
 
     const updated = await Internship.findByIdAndUpdate(
       id,
-      { name, years, instructor, description },
+      { name, years, instructor, description, textColor, backgroundColor },
       { new: true }
     );
 

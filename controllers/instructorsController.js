@@ -51,8 +51,6 @@ export const createInstructor = async (req, res) => {
     if (req.file) {
       const result = await streamUpload(req.file.buffer);
       imageUrl = result.secure_url;
-    } else {
-      return res.status(400).json({ message: "Image is required" });
     }
 
     const instructor = new Instructor({
@@ -60,7 +58,7 @@ export const createInstructor = async (req, res) => {
       description,
       years: parsedYears,
       internships: parsedInternships,
-      image: imageUrl,
+      image: imageUrl, // יהיה ריק אם לא נשלחה תמונה
     });
 
     await instructor.save();
@@ -70,6 +68,7 @@ export const createInstructor = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 
 export const updateInstructor = async (req, res) => {

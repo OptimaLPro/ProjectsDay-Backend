@@ -20,6 +20,14 @@ const internshipSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    textColor: {
+      type: String,
+      default: "000000",
+    },
+    backgroundColor: {
+      type: String,
+      default: "ffffff",
+    },
   },
   { timestamps: true }
 );
