@@ -3,6 +3,7 @@ import Internship from "../modules/internshipModule.js";
 export const getInternships = async (req, res) => {
   try {
     const { year } = req.query;
+    console.log("Year from query:", year);
     const filter = year ? { years: parseInt(year) } : {};
     const internships = await Internship.find(filter);
     res.status(200).json(internships);

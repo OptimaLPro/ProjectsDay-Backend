@@ -25,9 +25,11 @@ const streamUpload = (buffer) => {
 export const getInstructors = async (req, res) => {
   try {
     const { year } = req.query;
+    console.log("Year from query:", year);
     const filter = year ? { years: parseInt(year) } : {};
 
     const instructors = await Instructor.find(filter);
+    console.log("Instructors:", instructors);
     res.status(200).json(instructors);
   } catch (error) {
     console.error("Error retrieving instructors:", error);
