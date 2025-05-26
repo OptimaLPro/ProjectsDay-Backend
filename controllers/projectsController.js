@@ -79,17 +79,22 @@ export const getProjectById = async (req, res) => {
 export const createProject = async (req, res) => {
   try {
     const {
+      // project_id,
       name,
       internship,
       description,
       short_description,
       gallery,
       youtube,
-      instructor, // זה מגיע כשם (string)
+      instructor,
       year,
       members,
       awards,
     } = req.body;
+
+    // if (!project_id) {
+    //   return res.status(400).json({ message: "project_id is required." });
+    // }
 
     const parsedGallery =
       typeof gallery === "string" ? JSON.parse(gallery) : gallery;
@@ -98,32 +103,27 @@ export const createProject = async (req, res) => {
     const parsedMembers =
       typeof members === "string" ? JSON.parse(members) : members;
 
-    // 🟢 המר את האימיילים ל־ObjectId של המשתמשים
     const memberEmails = parsedMembers.map((m) => m.email || m);
     const userDocs = await User.find({ email: { $in: memberEmails } });
     const memberObjectIds = userDocs.map((u) => u._id);
 
-    // 🟢 המר את שם המרצה ל־ObjectId
     const instructorDoc = await mongoose
-      .model("instructors") // אם זה המודל שלך, אחרת תייבא Instructor
+      .model("instructors")
       .findOne({ name: instructor });
-
     if (!instructorDoc) {
       return res.status(400).json({ message: "Instructor not found." });
     }
-
     const instructorId = instructorDoc._id;
 
-    // 🟢 טפל בתמונה
     const imageFile = req.files?.image?.[0];
     if (!imageFile) {
       return res.status(400).json({ message: "Image is required." });
     }
-
     const result = await streamUpload(imageFile.buffer);
     const imageUrl = result.secure_url;
 
     const newProject = new Project({
+      // project_id,
       name,
       internship,
       description,
@@ -140,16 +140,16 @@ export const createProject = async (req, res) => {
     await newProject.save();
     res.status(201).json(newProject);
   } catch (error) {
-    console.error("Error creating project:", error);
+    console.error(error);
     res.status(500).json({ message: "Internal server error." });
   }
 };
 
 export const updateProject = async (req, res) => {
   try {
-    console.log("Update project request body:", req.body);
     const { id } = req.params;
     const {
+      // project_id,
       name,
       internship,
       description,
@@ -161,16 +161,20 @@ export const updateProject = async (req, res) => {
       awards,
     } = req.body;
 
+    // if (!project_id) {
+    //   return res.status(400).json({ message: "project_id is required." });
+    // }
+
     const members = JSON.parse(req.body.members || "[]");
     const parsedGallery =
       typeof gallery === "string" ? JSON.parse(gallery) : gallery;
 
-    let parsedAwards = undefined;
+    let parsedAwards;
     if (typeof awards === "string") {
       try {
         parsedAwards = JSON.parse(awards);
-      } catch (err) {
-        console.warn("Invalid awards JSON, keeping existing:", awards);
+      } catch {
+        parsedAwards = undefined;
       }
     } else if (Array.isArray(awards)) {
       parsedAwards = awards;
@@ -183,16 +187,13 @@ export const updateProject = async (req, res) => {
 
     const user = req.user;
     const isAdmin = user?.role === "admin";
-
     if (!isAdmin) {
       const userId = user?._id || user?.id;
       const isAuthorized = existingProject.members.some(
-        (memberId) => memberId.toString() === userId
+        (m) => m.toString() === userId
       );
       if (!isAuthorized) {
-        return res
-          .status(403)
-          .json({ message: "Not authorized to update this project" });
+        return res.status(403).json({ message: "Not authorized" });
       }
     }
 
@@ -201,77 +202,52 @@ export const updateProject = async (req, res) => {
     if (imageFile) {
       const result = await streamUpload(imageFile.buffer);
       imageUrl = result.secure_url;
-      console.log("Image URL:", imageUrl);
-    } else {
-      console.log("No image file provided, keeping existing image URL.");
     }
 
     const previousGallery = existingProject.gallery || [];
     const updatedGallery = parsedGallery || [];
-
     const removedImages = previousGallery.filter(
       (url) => !updatedGallery.includes(url)
     );
-
     for (const url of removedImages) {
       const publicId = extractCloudinaryPublicId(url);
-      if (publicId) {
-        try {
-          await cloudinary.uploader.destroy(publicId);
-        } catch (err) {
-          console.warn(
-            `Failed to delete image from Cloudinary: ${publicId}`,
-            err
-          );
-        }
-      }
+      if (publicId) await cloudinary.uploader.destroy(publicId);
     }
-
     existingProject.gallery = updatedGallery;
 
     if (req.files?.newGalleryFiles) {
-      const uploadedImages = [];
-
       const files = Array.isArray(req.files.newGalleryFiles)
         ? req.files.newGalleryFiles
         : [req.files.newGalleryFiles];
-
       for (const file of files) {
         const result = await streamUpload(file.buffer);
-        uploadedImages.push(result.secure_url);
+        existingProject.gallery.push(result.secure_url);
       }
-
-      existingProject.gallery = [...existingProject.gallery, ...uploadedImages];
     }
 
+    // existingProject.project_id = project_id;
     existingProject.name = name;
     existingProject.internship = mongoose.Types.ObjectId.isValid(internship)
       ? new mongoose.Types.ObjectId(internship)
       : existingProject.internship;
-
     existingProject.instructor = mongoose.Types.ObjectId.isValid(instructor)
       ? new mongoose.Types.ObjectId(instructor)
       : existingProject.instructor;
-
     existingProject.description = description;
     existingProject.short_description = short_description;
     existingProject.youtube = youtube;
     existingProject.year = year;
     existingProject.members = members;
     existingProject.image = imageUrl;
-
-    if (parsedAwards !== undefined) {
-      existingProject.awards = parsedAwards;
-    }
+    if (parsedAwards !== undefined) existingProject.awards = parsedAwards;
 
     await existingProject.save();
     res.status(200).json(existingProject);
   } catch (error) {
-    console.error("Error updating project:", error);
+    console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 function extractCloudinaryPublicId(url) {
   try {
