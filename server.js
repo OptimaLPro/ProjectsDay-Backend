@@ -9,6 +9,7 @@ import internshipRouter from "./routes/internships.js";
 import projectRouter from "./routes/projects.js";
 import yearbookRouter from "./routes/yearbooks.js";
 import awardRouter from "./routes/awards.js";
+import homepageRouter from "./routes/homepage.js"
 import { setupSwagger } from "./swagger.js";
 
 const app = express();
@@ -35,6 +36,7 @@ app.use("/api/instructors", instructorRouter);
 app.use("/api/auth", authRoutes);
 app.use("/api/yearbooks", yearbookRouter);
 app.use("/api/awards", awardRouter);
+app.use("/api/homepage", homepageRouter);
 
 const PORT = process.env.PORT || 5000;
 
