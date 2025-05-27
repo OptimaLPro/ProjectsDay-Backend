@@ -79,7 +79,8 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const formmatedEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: formmatedEmail });
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
