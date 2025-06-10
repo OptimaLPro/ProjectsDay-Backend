@@ -108,7 +108,6 @@ export const bulkRegister = async (req, res) => {
   }
 
   const results = { created: [], skipped: [], errors: [] };
-  console.log(users);
   for (const userData of users) {
     try {
       const {
