@@ -38,7 +38,7 @@ export const createYearbook = async (req, res) => {
 
 export const updateYearbook = async (req, res) => {
   const { id } = req.params;
-  const { year, active } = req.body;
+  const { year, active, userBlock, excludedUsers } = req.body;
 
   try {
     if (active) {
@@ -47,7 +47,7 @@ export const updateYearbook = async (req, res) => {
 
     const updatedYearbook = await Yearbook.findByIdAndUpdate(
       id,
-      { year, active },
+      { year, active, userBlock, excludedUsers },
       { new: true }
     );
 
@@ -57,7 +57,6 @@ export const updateYearbook = async (req, res) => {
 
     res.status(200).json(updatedYearbook);
   } catch (error) {
-    console.error("Error updating yearbook:", error);
     res.status(500).json({ error: "Server error" });
   }
 };

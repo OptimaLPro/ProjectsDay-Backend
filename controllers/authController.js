@@ -92,6 +92,15 @@ export const login = async (req, res) => {
           error: `You do not belong to the active yearbook (${activeYearbook?.year}).`,
         });
       }
+
+      if (
+        activeYearbook.userBlock === true &&
+        !activeYearbook.excludedUsers.includes(user._id)
+      ) {
+        return res.status(403).json({
+          error: "Login is currently disabled for your yearbook.",
+        });
+      }
     }
 
     const token = createToken(user);
