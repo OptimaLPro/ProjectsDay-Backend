@@ -12,6 +12,8 @@ import {
   updateUser,
   deleteAllUsers,
 } from "../controllers/authController.js";
+import { ensureUserMiddleware } from "../middlewares/ensureUserMiddleware.js";
+import { ensureAdminMiddleware } from "../middlewares/ensureAdminMiddleware.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -92,7 +94,7 @@ router.post("/login", login);
  *       200:
  *         description: List of users
  */
-router.get("/users", getAllUsers);
+router.get("/users", ensureUserMiddleware, ensureAdminMiddleware, getAllUsers);
 
 /**
  * @swagger
@@ -126,7 +128,12 @@ router.get("/users", getAllUsers);
  *       201:
  *         description: Users created successfully
  */
-router.post("/bulk-register", bulkRegister);
+router.post(
+  "/bulk-register",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  bulkRegister
+);
 
 /**
  * @swagger
@@ -171,7 +178,12 @@ router.post("/bulk-register", bulkRegister);
  *       404:
  *         description: User not found
  */
-router.put("/users/:id", upload.single("image"), updateUser);
+router.put(
+  "/users/:id",
+  ensureUserMiddleware,
+  upload.single("image"),
+  updateUser
+);
 
 /**
  * @swagger
@@ -193,7 +205,12 @@ router.put("/users/:id", upload.single("image"), updateUser);
  *       404:
  *         description: User not found
  */
-router.delete("/users/:id", deleteUser);
+router.delete(
+  "/users/:id",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  deleteUser
+);
 
 /**
  * @swagger
@@ -266,6 +283,11 @@ router.get("/users/:id", getUserById);
  *  500:
  *  description: Server error
  */
-router.delete("/users", deleteAllUsers);
+router.delete(
+  "/users",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  deleteAllUsers
+);
 
 export default router;

@@ -242,6 +242,10 @@ export const updateUser = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
+  if (req.user?.role !== "admin") {
+    return res.status(403).json({ message: "Only admin can delete users" });
+  }
+
   const { id } = req.params;
   try {
     await User.findByIdAndDelete(id);
@@ -253,10 +257,15 @@ export const deleteUser = async (req, res) => {
 
 export const deleteAllUsers = async (req, res) => {
   try {
+    if (req.user?.role !== "admin") {
+      return res.status(403).json({ message: "Only admin can delete users" });
+    }
+
     await User.deleteMany({});
-    res.json({ message: "All users deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ error: "Server error" });
+    res.status(200).json({ message: "All users deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting users:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
