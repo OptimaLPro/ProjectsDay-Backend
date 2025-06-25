@@ -10,6 +10,7 @@ import {
   getAllProjects,
   assignProject,
   unassignProject,
+  getProjectsByInternship,
 } from "../controllers/projectsController.js";
 import { ensureUserMiddleware } from "../middlewares/ensureUserMiddleware.js";
 
@@ -52,6 +53,24 @@ router.get("/", getProjects);
  *                 $ref: '#/components/schemas/Project'
  */
 router.get("/all", getAllProjects);
+
+/**
+ * @swagger
+ * /api/projects/by-internship/{internshipId}:
+ *   get:
+ *     summary: Get all projects by internship ID
+ *     tags: [Projects]
+ *     parameters:
+ *       - in: path
+ *         name: internshipId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of projects in the given internship
+ */
+router.get("/by-internship/:internshipId", getProjectsByInternship);
 
 /**
  * @swagger

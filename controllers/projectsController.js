@@ -122,6 +122,27 @@ export const getAllProjects = async (req, res) => {
   }
 };
 
+export const getProjectsByInternship = async (req, res) => {
+  try {
+    const { internshipId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(internshipId)) {
+      return res.status(400).json({ message: "Invalid internship ID" });
+    }
+
+    const projects = await Project.find({
+      internship: internshipId,
+    })
+      .populate("internship")
+      .populate("awards");
+
+    res.status(200).json(projects);
+  } catch (error) {
+    console.error("Error fetching projects by internship:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export const getProjectById = async (req, res) => {
   try {
     const { id } = req.params;
