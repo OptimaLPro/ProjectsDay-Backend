@@ -1,41 +1,46 @@
 import { MongoClient } from "mongodb";
-import fs from "fs";
-import path from "path";
-import dotenv from "dotenv";
 import { EJSON } from "bson";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-dotenv.config();
-
-async function backup() {
+export default async function handler(req, res) {
   try {
     const client = new MongoClient(process.env.MONGODB_URI);
     await client.connect();
-
     const db = client.db(process.env.DB_NAME);
     const collections = await db.collections();
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const backupFolder = path.join(process.cwd(), "backups", `backup-${timestamp}`);
-    if (!fs.existsSync(backupFolder)) {
-      fs.mkdirSync(backupFolder, { recursive: true });
-    }
+    const prefix = `backup-${timestamp}`;
+
+    const s3 = new S3Client({
+      region: process.env.S3_REGION,
+      credentials: {
+        accessKeyId: process.env.S3_ACCESS_KEY_ID,
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+      },
+    });
 
     for (const collection of collections) {
       const name = collection.collectionName;
       const docs = await collection.find().toArray();
-
       const serialized = EJSON.stringify(EJSON.serialize(docs), null, 2);
-      const filePath = path.join(backupFolder, `${name}.json`);
-      fs.writeFileSync(filePath, serialized);
-      console.log(`✅ Saved ${name}.json`);
+
+      const command = new PutObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: `${prefix}/${name}.json`,
+        Body: serialized,
+        ContentType: "application/json",
+      });
+
+      await s3.send(command);
     }
 
     await client.close();
-
-    console.log("🎉 Backup completed to folder:", backupFolder);
+    res
+      .status(200)
+      .json({ success: true, message: "Backup uploaded to S3", prefix });
   } catch (err) {
-    console.error("❌ Backup error:", err.message);
+    console.error("❌ Backup to S3 failed:", err);
+    res.status(500).json({ success: false, error: err.message });
   }
 }
-
-backup();
