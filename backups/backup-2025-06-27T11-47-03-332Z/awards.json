@@ -1,0 +1,53 @@
+[
+  {
+    "_id": {
+      "$oid": "67f801c9b6c2a0206a410ba0"
+    },
+    "name": "Best Design",
+    "description": "Awarded for outstanding design and user experience.",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1744319697/Best_Design_tce6of.png"
+  },
+  {
+    "_id": {
+      "$oid": "67f801c9b6c2a0206a410b9e"
+    },
+    "name": "Third Place",
+    "description": "A project that stood out among the top contenders.",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1744319697/3rd_Place_ndzhr9.png"
+  },
+  {
+    "_id": {
+      "$oid": "67f801c9b6c2a0206a410b9b"
+    },
+    "name": "Audience Favorite",
+    "description": "Awarded to the project with the most audience votes.",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1744365974/awards/rhkhhbz4hd4aa03np3hj.png",
+    "updatedAt": {
+      "$date": "2025-04-15T18:21:56.573Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "67f801c9b6c2a0206a410b9f"
+    },
+    "name": "Innovation Award",
+    "description": "Recognizing the most original and innovative idea.",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1744319697/Most_Innovative_ck0dil.png"
+  },
+  {
+    "_id": {
+      "$oid": "67f801c9b6c2a0206a410b9c"
+    },
+    "name": "First Place",
+    "description": "The best project overall according to the judging panel.",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1744319697/1rd_Place_zlvusv.png"
+  },
+  {
+    "_id": {
+      "$oid": "67f801c9b6c2a0206a410b9d"
+    },
+    "name": "Second Place",
+    "description": "Runner-up project demonstrating excellence and creativity.",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1744319697/2rd_Place_ipvbos.png"
+  }
+]

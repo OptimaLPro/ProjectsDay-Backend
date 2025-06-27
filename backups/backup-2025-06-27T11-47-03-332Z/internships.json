@@ -1,0 +1,136 @@
+[
+  {
+    "_id": {
+      "$oid": "67ec44e3d2f833be85e9fc76"
+    },
+    "name": "CS - Data Science",
+    "years": [
+      2025
+    ],
+    "instructor": {
+      "$oid": "67ec43a6d2f833be85e9fc6a"
+    },
+    "description": "The Data Science internship focuses on using data to uncover insights and drive decisions. Students work on real-world data sets, applying statistical models, data wrangling, and machine learning techniques. With tools like Python, pandas, and scikit-learn, interns will learn how to build pipelines for data preparation, model training, and evaluation. The program emphasizes hands-on experience in building predictive models and storytelling with data through visualization.",
+    "updatedAt": {
+      "$date": "2025-05-20T18:17:52.173Z"
+    },
+    "textColor": "131313",
+    "backgroundColor": "d7d7f7"
+  },
+  {
+    "_id": {
+      "$oid": "67ec44e3d2f833be85e9fc7a"
+    },
+    "name": "CS - Cyber",
+    "years": [
+      2025
+    ],
+    "updatedAt": {
+      "$date": "2025-05-18T13:50:26.383Z"
+    },
+    "instructor": {
+      "$oid": "67ec43a6d2f833be85e9fc62"
+    },
+    "description": "The Cyber Security internship introduces students to core concepts in digital defense. Participants learn ethical hacking, network monitoring, and system hardening through hands-on labs and real-world simulations. Topics covered include threat modeling, penetration testing, and the use of tools like Wireshark, Metasploit, and firewalls. Ideal for students passionate about securing systems and understanding how attackers think.",
+    "textColor": "131313",
+    "backgroundColor": "00ff3c4d"
+  },
+  {
+    "_id": {
+      "$oid": "67ec44e3d2f833be85e9fc7b"
+    },
+    "name": "CS - Fintech",
+    "years": [
+      2025
+    ],
+    "updatedAt": {
+      "$date": "2025-05-18T13:50:32.220Z"
+    },
+    "instructor": {
+      "$oid": "67ec43a6d2f833be85e9fc68"
+    },
+    "description": "The Fintech internship merges finance and technology, exposing students to algorithmic trading, blockchain, and payment systems. Students will work on applications that analyze financial data, build trading bots, or simulate investment strategies. Tools include Python, SQL, and real-world financial APIs. Ideal for tech enthusiasts with an interest in modern finance.",
+    "textColor": "131313",
+    "backgroundColor": "fbff004d"
+  },
+  {
+    "_id": {
+      "$oid": "67ec44e3d2f833be85e9fc78"
+    },
+    "name": "CS - Fullstack",
+    "years": [
+      2025
+    ],
+    "instructor": {
+      "$oid": "67ec43a6d2f833be85e9fc60"
+    },
+    "description": "This internship offers students a complete journey through web application development. From designing frontends with React to building robust APIs with Node.js and Express, participants will gain skills in both client and server-side development. Topics include authentication, database integration (MongoDB), deployment, and version control. Perfect for students aiming to become fullstack developers ready for industry challenges.",
+    "updatedAt": {
+      "$date": "2025-05-25T11:10:34.358Z"
+    },
+    "textColor": "131313",
+    "backgroundColor": "b1f2ec"
+  },
+  {
+    "_id": {
+      "$oid": "67ec44e3d2f833be85e9fc79"
+    },
+    "name": "CS - Deep Learning",
+    "years": [
+      2025
+    ],
+    "instructor": {
+      "$oid": "67ec43a6d2f833be85e9fc65"
+    },
+    "description": "The Deep Learning internship explores neural networks for vision, language, and structured data. Students will use frameworks like TensorFlow and PyTorch to train and evaluate models such as CNNs, RNNs, and Transformers. This track is perfect for those interested in AI-driven applications like image recognition, NLP, and recommendation systems. Projects include model optimization, dataset augmentation, and transfer learning.",
+    "updatedAt": {
+      "$date": "2025-05-18T13:50:36.005Z"
+    },
+    "textColor": "131313",
+    "backgroundColor": "ff26004d"
+  },
+  {
+    "_id": {
+      "$oid": "681767695b1e40c9108d8f74"
+    },
+    "name": "Data Science",
+    "years": [
+      2025
+    ],
+    "instructor": {
+      "$oid": "681761949b1bd6fc651fa282"
+    },
+    "description": "The NLP & Data Science internship includes a strong focus on Natural Language Processing (NLP) as a core component of the program. Students explore the world of NLP to develop the ability to extract insights from text, optimize language models, and perform tasks such as text classification, recommendation, and semantic analysis. They also learn to analyze differences between documents and various text types. Using tools like LLM’s, and Hugging Face Transformers, students gain hands-on experience in building and evaluating NLP pipelines, combining data-driven approaches with linguistic understanding to solve real-world problems.\n\n",
+    "createdAt": {
+      "$date": "2025-05-04T13:11:05.245Z"
+    },
+    "updatedAt": {
+      "$date": "2025-05-25T15:52:58.624Z"
+    },
+    "__v": 0,
+    "textColor": "131313",
+    "backgroundColor": "f700ff4d"
+  },
+  {
+    "_id": {
+      "$oid": "6832cfadb5e86e41a4aa76b5"
+    },
+    "name": "CS-Excellence Program",
+    "years": [
+      2025
+    ],
+    "instructor": {
+      "$oid": "6832d001d93e8f3da3a7e7c6"
+    },
+    "description": "The Excellence Program in the Faculty of Computer Science is a special study program designed for outstanding students. This program offers outstanding students opportunities to expand their knowledge in the field, conduct research, participate in conferences, and study with senior faculty members. This program is designed for students who are looking for a challenge and want to achieve excellent results.\nThe program offers several benefits:\nResearch opportunities:\nStudents participate in research projects, work with researchers from the faculty, and publish academic articles.\nConference participation:\nStudents can participate in scientific conferences in the field.\nNetworking:\nThe Excellence Program allows students to network with senior faculty members and other outstanding students.",
+    "textColor": "",
+    "backgroundColor": "75acf0",
+    "createdAt": {
+      "$date": "2025-05-25T08:07:09.299Z"
+    },
+    "updatedAt": {
+      "$date": "2025-05-25T11:10:50.948Z"
+    },
+    "__v": 0
+  }
+]

@@ -133,7 +133,7 @@ export const bulkRegister = async (req, res) => {
         continue;
       }
 
-      const exists = await User.findOne({ email });
+      const exists = await User.findOne({ email: email.trim().toLowerCase() });
       if (exists) {
         console.log(`User with email ${email} already exists`);
         results.skipped.push({ email, reason: "Email already exists" });
@@ -153,7 +153,7 @@ export const bulkRegister = async (req, res) => {
       }
 
       const newUser = new User({
-        email,
+        email: email.trim().toLowerCase(),
         password,
         role: role || "student",
         internship: internship,
@@ -242,10 +242,6 @@ export const updateUser = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-  if (req.user?.role !== "admin") {
-    return res.status(403).json({ message: "Only admin can delete users" });
-  }
-
   const { id } = req.params;
   try {
     await User.findByIdAndDelete(id);

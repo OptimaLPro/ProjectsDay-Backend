@@ -52,7 +52,7 @@ const router = Router();
  *       400:
  *         description: Email already in use
  */
-router.post("/register", register);
+router.post("/register", ensureUserMiddleware, ensureAdminMiddleware, register);
 
 /**
  * @swagger
@@ -231,7 +231,12 @@ router.delete(
  *       200:
  *         description: List of users
  */
-router.get("/users/by-emails", getUsersByEmails);
+router.get(
+  "/users/by-emails",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  getUsersByEmails
+);
 
 /**
  * @swagger

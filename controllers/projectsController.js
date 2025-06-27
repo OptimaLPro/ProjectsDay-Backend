@@ -57,43 +57,31 @@ export const getProjects = async (req, res) => {
     const activeFilter = req.query.filter || "All";
     const pageSize = 6;
 
-    // אובייקט הסינון הראשי שייבנה באופן דינמי
     let filter = {};
     if (year) {
       filter.year = year;
     }
 
-    // 1. טיפול בסינון לפי התמחות או פרויקטים זוכים
     if (activeFilter && activeFilter !== "All") {
       if (activeFilter === "awarded") {
-        // סינון פרויקטים שזכו בפרס
-        // התנאי בודק שהשדה 'awards' קיים והוא לא מערך ריק
         filter.awards = { $exists: true, $ne: [] };
       } else {
-        // סינון לפי שם התמחות
         const internship = await mongoose
           .model("internships")
           .findOne({ name: activeFilter });
         if (internship) {
           filter.internship = internship._id;
         } else {
-          // אם לא נמצאה התמחות בשם הזה, נחזיר מערך ריק
           return res.status(200).json({ projects: [], nextPage: null });
         }
       }
     }
 
-    // 2. טיפול בחיפוש טקסטואלי
     if (searchQuery) {
       const searchRegex = { $regex: searchQuery, $options: "i" };
-      filter.$or = [
-        { name: searchRegex },
-        { description: searchRegex },
-        // { project_id: searchRegex }, // הסרתי מהערה אם אתה משתמש בשדה זה
-      ];
+      filter.$or = [{ name: searchRegex }, { description: searchRegex }];
     }
-    
-    // הרצת השאילתה הסופית עם כל המסננים
+
     const projects = await Project.find(filter)
       .populate("internship")
       .populate("awards")

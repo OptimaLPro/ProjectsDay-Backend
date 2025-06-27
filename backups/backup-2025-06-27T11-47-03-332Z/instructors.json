@@ -1,0 +1,311 @@
+[
+  {
+    "_id": {
+      "$oid": "67ec43a6d2f833be85e9fc60"
+    },
+    "name": "Dr. Eliav Menachi",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1747732051/instructors/tahppscpcmzzksggxp7c.jpg",
+    "description": "Dr. Eliav Menachi serves as the Graduation Projects Manager and the Head of Full Stack Development program in the Computer Science department in the College of Management Academic Studies. In addition, Eliav has more than 15 years of experience in the high-tech industry as a seniorEliav is a lecturer in the fields of Communication Networks, Mobile Systems Development and Operating Systems. Eliav holds a Post-Doctoral (2015), a PhD (2014) and a M.Sc (2009) in Information Systems Engineering from Ben-Gurion University and B.Sc. in Communication Systems Engineering, Ben-Gurion University (2000). programmer, team & group leader, CTO in the fields of Mobile systems, networks and databases. Research Interests: Energy Efficient Vehicles, Networks and Networks security, Machine Learning, Aviation related applications, Aircrafts noise models.",
+    "years": [
+      2025
+    ],
+    "updatedAt": {
+      "$date": "2025-05-20T09:07:31.512Z"
+    },
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc78"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "67ec43a6d2f833be85e9fc61"
+    },
+    "name": "Dr. Eliahu Khalastchi",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1744277378/instructors/kxz5ctfgg9ynsjl8w6lt.jpg",
+    "description": "Dr. Eliahu Khalastchi is a Senior Lecturer and Artificial Intelligence Researcher in the Computer Science department in the College of Management Academic Studies. He holds a Ph.D. in Software and Information Systems Engineering from Ben-Gurion University (2015), M.Sc., summa cum laude, in Computer Science from Bar-Ilan University (2010), and a B.Sc. in Computer Science from Bar-Ilan University (2008). Eliahu has served as a Lecturer since 2010 in the College of Management Academic Studies. Eliahu’s research interests are Artificial Intelligence, Autonomous Agents and Unmanned Vehicles, Anomaly / Fault Detection and Diagnosis with Hybrid Data-Driven and Model-Based Approaches.",
+    "years": [
+      2024
+    ],
+    "updatedAt": {
+      "$date": "2025-05-14T21:58:57.814Z"
+    },
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc7b"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "67ec43a6d2f833be85e9fc62"
+    },
+    "name": "Dr. Hemi Leibowitz",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1747824025/instructors/rnmhjnxcgp8qelixjqyy.jpg",
+    "description": "Dr. Menahem Leibowitz is a researcher and lecturer in the fields of network and cyber security. Menahem holds a PhD, MSc and BSc in computer science from Bar-Ilan University. His research interests are network and cyber security in general, and in particular anonymous communication, privacy, key management and usable security",
+    "years": [
+      2025
+    ],
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc7a"
+      }
+    ],
+    "updatedAt": {
+      "$date": "2025-05-21T10:40:26.325Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "67ec43a6d2f833be85e9fc6a"
+    },
+    "name": "Dr. Shay Horovitz",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1744277433/instructors/p1iboaiapbbfiqdv0llf.jpg",
+    "description": "Dr. Shay Horovitz is head of the Data Science specialisation at the Computer Science School of the College of Management Academic Studies. In addition, Shay is a senior lecturer of Computer Science and a researcher in Machine Learning, Deep Learning and Data Science. Shay holds a PhD in Computer Science from the Hebrew University (Direct Track), MSc in Computer Science from the Hebrew University and BSc in Computer Science & Mathematics from Bar-Ilan University. Shay has over 27 years of experience, including founding startup companies, consulting High Tech companies in the fields of Machine/Deep Learning and Algorithms in various companies as Huawei (Toga Networks), iMesh. Currently he is Chief Research at Holisto (Splitty Travel). Research interests: Behavioural aspects in systems, services and applications using Data Science algorithms utilising Machine Learning and Deep Learning.",
+    "years": [
+      2025
+    ],
+    "updatedAt": {
+      "$date": "2025-05-25T08:11:37.111Z"
+    },
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc76"
+      },
+      {
+        "$oid": "6832cfadb5e86e41a4aa76b5"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "67ec43a6d2f833be85e9fc65"
+    },
+    "name": "Dr. Moshe Butman",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1744277407/instructors/rtyuhotgn6ujpu4bid5g.jpg",
+    "description": "Dr. Moshe Butman holds a PhD. in Computer Science from Bar Ilan University, M.Sc in Computer Science from Bar Ilan University and a B.Sc. in mechanical engineering from the Technion. Moshe is a lecturer in CS school at the College of Management Academic Studies. He is the Head of the Deep Learning specialization at the CS faculty. Moshe has more than 20 years in the High-tech industry. He is CTO at Video Inform Ltd. Research Interests and teaching focuses on Computer Vision, Deep Learning and Reinforcement Learning.",
+    "years": [
+      2025
+    ],
+    "updatedAt": {
+      "$date": "2025-05-25T08:11:31.498Z"
+    },
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc79"
+      },
+      {
+        "$oid": "6832cfadb5e86e41a4aa76b5"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "67ec43a6d2f833be85e9fc64"
+    },
+    "name": "Mr. Omri Bitan",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1747736084/instructors/dx3htxmnyzrv5w6bj0h1.jpg",
+    "description": "Omri Bitan is a seasoned tech entrepreneur and product leader with over 18 years of experience in software engineering, startup founding, and innovation strategy",
+    "years": [
+      2025
+    ],
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc78"
+      }
+    ],
+    "updatedAt": {
+      "$date": "2025-05-20T10:14:44.762Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "67ec43a6d2f833be85e9fc68"
+    },
+    "name": "Mr. Ari Ben-Ephraim",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1747836012/instructors/wazxbvahhfpdcksz2lva.jpg",
+    "description": "Ari Ben-Ephraim is head of the Fintech specialisation at the Computer Science School of the College of Management Academic Studies. Ari is a founder and CEO of AlgoTrade Labs, a venture specialises and operates in the field of Algorithmic Trading. In his previous position, Ari served as VP of Business Development and Strategy in the financial sector. He has extensive experience in the capital markets, algorithmic trading platforms and strategies. Ari lectures on Algotrading at many conferences and leading universities in Israel. Ari holds a MSc degree in Computer Science from the Technion, and an MBA from Queens University in Canada.",
+    "years": [
+      2025
+    ],
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc7b"
+      }
+    ],
+    "updatedAt": {
+      "$date": "2025-05-21T14:00:12.882Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6817609c9b1bd6fc651fa26a"
+    },
+    "name": "Zack Amsalem",
+    "image": "",
+    "description": "fasdfasd",
+    "years": [
+      2025
+    ],
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc78"
+      }
+    ],
+    "createdAt": {
+      "$date": "2025-05-04T12:42:04.364Z"
+    },
+    "updatedAt": {
+      "$date": "2025-05-04T12:42:04.364Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "681761109b1bd6fc651fa277"
+    },
+    "name": "Dr. Gal Badishi",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1747836192/instructors/meebvnrgyqid6mt1bwek.jpg",
+    "description": "sadcsd",
+    "years": [
+      2025
+    ],
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc78"
+      },
+      {
+        "$oid": "67ec44e3d2f833be85e9fc7a"
+      }
+    ],
+    "createdAt": {
+      "$date": "2025-05-04T12:44:00.888Z"
+    },
+    "updatedAt": {
+      "$date": "2025-05-21T14:03:13.058Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6817613c8c53ec10038a3cc8"
+    },
+    "name": "Dr. Yehuda Elmaliach",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1747829452/instructors/luvsephb4n4z4cqinq5d.jpg",
+    "description": "fvadfvadf",
+    "years": [
+      2025
+    ],
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc78"
+      }
+    ],
+    "createdAt": {
+      "$date": "2025-05-04T12:44:44.323Z"
+    },
+    "updatedAt": {
+      "$date": "2025-05-21T12:10:52.637Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6817615c8c53ec10038a3ccd"
+    },
+    "name": "Dr. Igor Rochlin",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1747835850/instructors/mthqttg8pchsqtklnuug.jpg",
+    "description": "Dr. Igor Rokhlin, Dean of the Faculty of Computer Science, is a researcher and lecturer with a B.Sc. in Computer Science, an M.Sc. in Computer Science with a specialization in Genetic Algorithms, and a Ph.D. in Computer Science with a specialization in Artificial Intelligence from Bar-Ilan University.\r\n\r\nBefore returning to academia, Dr. Rokhlin worked at leading companies in the industry. His research focuses on Artificial Intelligence (AI), particularly in game theory, search theory, and multi-agent systems. His work has been published in prominent journals both in Israel and internationally, and he has received awards both locally and abroad.\r\n\r\nHe believes that “a computer science graduate is not just a programmer who writes code, but an artist who creates software and is passionate about mathematics and computer science.”",
+    "years": [
+      2025
+    ],
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc78"
+      }
+    ],
+    "createdAt": {
+      "$date": "2025-05-04T12:45:16.630Z"
+    },
+    "updatedAt": {
+      "$date": "2025-05-21T13:58:50.957Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "681761729b1bd6fc651fa27d"
+    },
+    "name": "Dr. Rani Izsak",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1747836288/instructors/iwfgdox84slrjikyvsnq.jpg",
+    "description": "Dr. Rani Izsak completed his PhD and postdoctoral studies at the Weizmann Institute of Science. He is an AI entrepreneur, advisor, and the inventor of two U.S. patents. His research focuses on algorithms and artificial intelligence.\r\n\r\nTogether with his co-authors, Dr. Izsak developed a new mathematical measure for synergy, with applications across multiple algorithms. He has also published several papers in the field of AI. His startup combines AI with travel and holds two granted U.S. patents. Dr. Izsak’s work has been published and presented at leading conferences.\r\n",
+    "years": [
+      2025
+    ],
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc78"
+      },
+      {
+        "$oid": "67ec44e3d2f833be85e9fc79"
+      }
+    ],
+    "createdAt": {
+      "$date": "2025-05-04T12:45:38.016Z"
+    },
+    "updatedAt": {
+      "$date": "2025-05-21T14:04:49.132Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "681761949b1bd6fc651fa282"
+    },
+    "name": "Dr. Or Anidjar",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1747756075/instructors/exdjozjwnoldzodaokip.jpg",
+    "description": "Dr. Or Haim Anidjar is an Assistant Professor (Senior Lecturer) at the Faculty of Computer Science, The College of Management, Israel, and a Senior Faculty Member in the Department of Computer Software & Engineering at Ariel University, Israel. His main research interests are Natural Language Processing, Multilingual Speech Recognition, and the intersection between them. In addition, Or is a member of the Kinematics and Computational Geometry (K&CG) Lab and the Ariel Cyber Innovation Center (ACIC).\r\n\r\nOr received his B.Sc. degree in Computer Science from Bar-Ilan University, Israel, and his M.Sc. and Ph.D. degrees in Computer Science and Applied Mathematics from Ariel University, Israel, in 2015, 2019, and 2021, respectively. In 2022, Or was a Postdoctoral Fellow at the ACIC, Ariel University, Israel. Using deep learning methods, his research focuses on multidisciplinary approaches, including ASR & Language Models, Speaker Change Detection and Diarization, Speaker Identification, and Anomaly Detection in acoustic and textual datasets.",
+    "years": [
+      2025
+    ],
+    "internships": [
+      {
+        "$oid": "67ec44e3d2f833be85e9fc76"
+      },
+      {
+        "$oid": "681767695b1e40c9108d8f74"
+      }
+    ],
+    "createdAt": {
+      "$date": "2025-05-04T12:46:12.205Z"
+    },
+    "updatedAt": {
+      "$date": "2025-05-20T15:47:56.222Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6832d001d93e8f3da3a7e7c6"
+    },
+    "name": "Dr. Galit Haim",
+    "image": "https://res.cloudinary.com/dwgbi63rq/image/upload/v1748160513/instructors/mn20v3mfesbnsumxpxez.jpg",
+    "description": "Dr. Galit Haim is the Deputy Dean of the Computer Science school in the College of Management Academic Studies. She is also a lecturer in Computer Science, a manager of the CS excellence program, and a researcher in the Artificial intelligent (AI) field.\r\n\r\nHer research interest in the AI field is in human computer agents negotiation, modeling and analyzing human behavior.\r\n\r\nGalit also has more than 15 years experience in the High-Tech industry as a software engineer and a team leader in the field of real time and embedded systems.",
+    "years": [
+      2025
+    ],
+    "internships": [
+      {
+        "$oid": "6832cfadb5e86e41a4aa76b5"
+      }
+    ],
+    "createdAt": {
+      "$date": "2025-05-25T08:08:33.691Z"
+    },
+    "updatedAt": {
+      "$date": "2025-05-25T11:08:19.968Z"
+    },
+    "__v": 0
+  }
+]

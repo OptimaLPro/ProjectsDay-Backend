@@ -60,7 +60,7 @@ export const createInstructor = async (req, res) => {
       description,
       years: parsedYears,
       internships: parsedInternships,
-      image: imageUrl, // יהיה ריק אם לא נשלחה תמונה
+      image: imageUrl,
     });
 
     await instructor.save();
