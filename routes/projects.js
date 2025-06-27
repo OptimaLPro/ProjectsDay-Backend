@@ -1,16 +1,16 @@
 import { Router } from "express";
 import {
-  getProjectById,
-  getProjects,
+  assignProject,
   createProject,
-  upload,
-  getMyProject,
-  updateProject,
   deleteProject,
   getAllProjects,
-  assignProject,
-  unassignProject,
+  getMyProject,
+  getProjectById,
+  getProjects,
   getProjectsByInternship,
+  unassignProject,
+  updateProject,
+  upload,
 } from "../controllers/projectsController.js";
 import { ensureUserMiddleware } from "../middlewares/ensureUserMiddleware.js";
 
@@ -145,6 +145,7 @@ router.get("/:id", getProjectById);
  */
 router.post(
   "/create",
+  ensureUserMiddleware,
   upload.fields([
     { name: "image", maxCount: 1 },
     { name: "newGalleryFiles", maxCount: 10 },

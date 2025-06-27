@@ -1,9 +1,11 @@
 import express from "express";
 import {
-  getHomepage,
   createHomepage,
+  getHomepage,
   updateHomepage,
 } from "../controllers/homepageController.js";
+import { ensureAdminMiddleware } from "../middlewares/ensureAdminMiddleware.js";
+import { ensureUserMiddleware } from "../middlewares/ensureUserMiddleware.js";
 
 const router = express.Router();
 
@@ -43,7 +45,7 @@ router.get("/", getHomepage);
  *       201:
  *         description: Created
  */
-router.post("/", createHomepage);
+router.post("/", ensureUserMiddleware, ensureAdminMiddleware, createHomepage);
 
 /**
  * @swagger
@@ -74,6 +76,11 @@ router.post("/", createHomepage);
  *       200:
  *         description: Updated
  */
-router.put("/:type", updateHomepage);
+router.put(
+  "/:type",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  updateHomepage
+);
 
 export default router;

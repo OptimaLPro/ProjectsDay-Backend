@@ -1,10 +1,12 @@
 import { Router } from "express";
 import {
-  getInternships,
   createInternship,
-  updateInternship,
   deleteInternship,
+  getInternships,
+  updateInternship,
 } from "../controllers/internshipsController.js";
+import { ensureAdminMiddleware } from "../middlewares/ensureAdminMiddleware.js";
+import { ensureUserMiddleware } from "../middlewares/ensureUserMiddleware.js";
 
 const router = Router();
 
@@ -60,7 +62,7 @@ router.get("/", getInternships);
  *       201:
  *         description: Internship created successfully
  */
-router.post("/", createInternship);
+router.post("/", ensureUserMiddleware, ensureAdminMiddleware, createInternship);
 
 /**
  * @swagger
@@ -98,7 +100,12 @@ router.post("/", createInternship);
  *       200:
  *         description: Internship updated successfully
  */
-router.put("/:id", updateInternship);
+router.put(
+  "/:id",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  updateInternship
+);
 
 /**
  * @swagger
@@ -118,6 +125,11 @@ router.put("/:id", updateInternship);
  *       200:
  *         description: Internship deleted successfully
  */
-router.delete("/:id", deleteInternship);
+router.delete(
+  "/:id",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  deleteInternship
+);
 
 export default router;

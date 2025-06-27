@@ -1,11 +1,13 @@
 import { Router } from "express";
 import {
-  getYearbooks,
-  getActiveYearbook,
-  updateYearbook,
   createYearbook,
   deleteYearbook,
+  getActiveYearbook,
+  getYearbooks,
+  updateYearbook,
 } from "../controllers/yearbooksController.js";
+import { ensureAdminMiddleware } from "../middlewares/ensureAdminMiddleware.js";
+import { ensureUserMiddleware } from "../middlewares/ensureUserMiddleware.js";
 
 const router = Router();
 
@@ -68,8 +70,7 @@ router.get("/active", getActiveYearbook); // Get the active yearbook
  *       201:
  *         description: Yearbook created successfully
  */
-router.post("/", createYearbook); // Create a new yearbook
-
+router.post("/", ensureUserMiddleware, ensureAdminMiddleware, createYearbook); // Create a new yearbook
 /**
  * @swagger
  * /api/yearbooks/{id}:
@@ -98,7 +99,7 @@ router.post("/", createYearbook); // Create a new yearbook
  *       200:
  *         description: Yearbook updated successfully
  */
-router.put("/:id", updateYearbook); // Update a yearbook by ID
+router.put("/:id", ensureUserMiddleware, ensureAdminMiddleware, updateYearbook); // Update a yearbook by ID
 
 /**
  * @swagger
@@ -120,6 +121,11 @@ router.put("/:id", updateYearbook); // Update a yearbook by ID
  *       404:
  *         description: Yearbook not found
  */
-router.delete("/:id", deleteYearbook); // Delete a yearbook by ID
+router.delete(
+  "/:id",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  deleteYearbook
+); // Delete a yearbook by ID
 
 export default router;

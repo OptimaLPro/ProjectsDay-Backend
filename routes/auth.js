@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import {
   bulkRegister,
+  deleteAllUsers,
   deleteUser,
   getAllUserEmails,
   getAllUsers,
@@ -10,10 +11,9 @@ import {
   login,
   register,
   updateUser,
-  deleteAllUsers,
 } from "../controllers/authController.js";
-import { ensureUserMiddleware } from "../middlewares/ensureUserMiddleware.js";
 import { ensureAdminMiddleware } from "../middlewares/ensureAdminMiddleware.js";
+import { ensureUserMiddleware } from "../middlewares/ensureUserMiddleware.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 

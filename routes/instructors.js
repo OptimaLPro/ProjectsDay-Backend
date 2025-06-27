@@ -1,12 +1,14 @@
 import { Router } from "express";
-import {
-  getInstructors,
-  createInstructor,
-  updateInstructor,
-  getInstructorById,
-  deleteInstructor,
-} from "../controllers/instructorsController.js";
 import multer from "multer";
+import {
+  createInstructor,
+  deleteInstructor,
+  getInstructorById,
+  getInstructors,
+  updateInstructor,
+} from "../controllers/instructorsController.js";
+import { ensureAdminMiddleware } from "../middlewares/ensureAdminMiddleware.js";
+import { ensureUserMiddleware } from "../middlewares/ensureUserMiddleware.js";
 
 const storage = multer.memoryStorage();
 export const upload = multer({ storage });
@@ -59,7 +61,13 @@ router.get("/", getInstructors);
  *       201:
  *         description: Instructor created successfully
  */
-router.post("/", upload.single("image"), createInstructor);
+router.post(
+  "/",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  upload.single("image"),
+  createInstructor
+);
 
 /**
  * @swagger
@@ -92,7 +100,13 @@ router.post("/", upload.single("image"), createInstructor);
  *       200:
  *         description: Instructor updated successfully
  */
-router.put("/:id", upload.single("image"), updateInstructor);
+router.put(
+  "/:id",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  upload.single("image"),
+  updateInstructor
+);
 
 /**
  * @swagger
@@ -134,6 +148,11 @@ router.get("/:id", getInstructorById);
  *       200:
  *         description: Instructor deleted successfully
  */
-router.delete("/:id", deleteInstructor);
+router.delete(
+  "/:id",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  deleteInstructor
+);
 
 export default router;

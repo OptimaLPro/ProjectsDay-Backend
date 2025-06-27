@@ -1,11 +1,13 @@
 import express from "express";
 import multer from "multer";
 import {
-  getAwards,
   createAward,
-  updateAward,
   deleteAward,
+  getAwards,
+  updateAward,
 } from "../controllers/awardsController.js";
+import { ensureAdminMiddleware } from "../middlewares/ensureAdminMiddleware.js";
+import { ensureUserMiddleware } from "../middlewares/ensureUserMiddleware.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -58,7 +60,13 @@ router.get("/", getAwards);
  *       201:
  *         description: Award created successfully
  */
-router.post("/", upload.single("image"), createAward);
+router.post(
+  "/",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  upload.single("image"),
+  createAward
+);
 
 /**
  * @swagger
@@ -91,7 +99,13 @@ router.post("/", upload.single("image"), createAward);
  *       200:
  *         description: Award updated successfully
  */
-router.put("/:id", upload.single("image"), updateAward);
+router.put(
+  "/:id",
+  ensureUserMiddleware,
+  ensureAdminMiddleware,
+  upload.single("image"),
+  updateAward
+);
 
 /**
  * @swagger
@@ -111,6 +125,6 @@ router.put("/:id", upload.single("image"), updateAward);
  *       200:
  *         description: Award deleted successfully
  */
-router.delete("/:id", deleteAward);
+router.delete("/:id", ensureUserMiddleware, ensureAdminMiddleware, deleteAward);
 
 export default router;
