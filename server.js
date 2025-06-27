@@ -9,17 +9,23 @@ import internshipRouter from "./routes/internships.js";
 import projectRouter from "./routes/projects.js";
 import yearbookRouter from "./routes/yearbooks.js";
 import awardRouter from "./routes/awards.js";
-import homepageRouter from "./routes/homepage.js"
+import homepageRouter from "./routes/homepage.js";
 import { setupSwagger } from "./swagger.js";
 
 const app = express();
 
+const allowedOrigins = [
+  "https://graduationday.vercel.app",
+  "http://localhost:3000",
+];
+
 app.use(
   cors({
-    origin: "*",
+    origin: allowedOrigins,
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 app.use(express.json());
 
