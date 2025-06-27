@@ -3,6 +3,11 @@ import { EJSON } from "bson";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 export default async function handler(req, res) {
+  const secret = req.query.secret;
+  if (secret !== process.env.BACKUP_SECRET) {
+    return res.status(403).json({ success: false, error: "Unauthorized" });
+  }
+
   try {
     const client = new MongoClient(process.env.MONGODB_URI);
     await client.connect();
